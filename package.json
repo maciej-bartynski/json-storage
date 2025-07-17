@@ -15,24 +15,22 @@
     "dev": "jest --watch --detectOpenHandles --runInBand"
   },
   "keywords": [
-    "async",
-    "queue",
-    "tasks",
-    "typescript",
+    "JSON",
     "nodejs",
-    "promise",
-    "sequential"
+    "filesystem",
+    "CRUD",
+    "nodejs"
   ],
   "author": "bartek01001",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/maciej-bartynski/async-tasks-queue.git"
+    "url": "https://github.com/maciej-bartynski/json-storage.git"
   },
   "bugs": {
-    "url": "https://github.com/maciej-bartynski/async-tasks-queue/issues"
+    "url": "https://github.com/maciej-bartynski/json-storage.git/issues"
   },
-  "homepage": "https://github.com/maciej-bartynski/async-tasks-queue#readme",
+  "homepage": "https://github.com/maciej-bartynski/json-storage.git#readme",
   "publishConfig": {
     "access": "public"
   },
