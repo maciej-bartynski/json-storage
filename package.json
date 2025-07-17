@@ -1,0 +1,49 @@
+{
+  "name": "@bartek01001/json-storage",
+  "version": "1.0.0",
+  "description": "Service to manage CURD operations on JSON files",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project ./tsconfig.build.json --pretty",
+    "test": "jest --detectOpenHandles --runInBand",
+    "prepublishOnly": "npm run build",
+    "dev": "jest --watch --detectOpenHandles --runInBand"
+  },
+  "keywords": [
+    "async",
+    "queue",
+    "tasks",
+    "typescript",
+    "nodejs",
+    "promise",
+    "sequential"
+  ],
+  "author": "bartek01001",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maciej-bartynski/async-tasks-queue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maciej-bartynski/async-tasks-queue/issues"
+  },
+  "homepage": "https://github.com/maciej-bartynski/async-tasks-queue#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.14",
+    "jest": "^30.0.4",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@bartek01001/async-tasks-queue": "^1.0.0"
+  }
+}
