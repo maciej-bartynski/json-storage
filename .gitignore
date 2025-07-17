@@ -1,5 +1,4 @@
 node_modules
 dist
 data
-echo ".DS_Store" >> .gitignore
-echo "**/.DS_Store" >> .gitignore
+.DS_Store
