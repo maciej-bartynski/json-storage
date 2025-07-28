@@ -4,15 +4,20 @@
   "description": "Service to manage CURD operations on JSON files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "type": "module",
+  "imports": {
+    "#src/*.js": "./dist/src/*.js",
+    "#src/**/*.js": "./dist/src/**/*.js"
+  },
   "files": [
     "dist",
     "README.md"
   ],
   "scripts": {
-    "build": "tsc --project ./tsconfig.build.json --pretty",
-    "test": "jest --detectOpenHandles --runInBand",
+    "build": "tsc --pretty --project tsconfig.build.json",
+    "test": "vitest --run",
     "prepublishOnly": "npm run build",
-    "dev": "jest --watch --detectOpenHandles --runInBand"
+    "dev": "vitest"
   },
   "keywords": [
     "JSON",
@@ -35,13 +40,11 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.14",
-    "jest": "^30.0.4",
-    "ts-jest": "^29.4.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@bartek01001/async-tasks-queue": "^1.0.0"
+    "@bartek01001/async-tasks-queue": "^2.0.0"
   }
 }

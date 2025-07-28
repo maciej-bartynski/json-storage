@@ -1,5 +1,5 @@
-import fs from 'fs/promises';
-import JSONStorage from '@/JSONStorage';
+import * as fs from 'fs/promises';
+import JSONStorage from '#src/JSONStorage.js';
 
 describe('Field equality', () => {
     let testStorage: JSONStorage;
@@ -27,7 +27,7 @@ describe('Field equality', () => {
     afterAll(async () => {
         const dir = testStorage['directory'];
         const dirPath = `${process.cwd()}/${dir}`;
-        await fs.rmdir(dirPath, { recursive: true });
+        await fs.rm(dirPath, { recursive: true });
     });
 
     it('By string field equality', async () => {
@@ -88,7 +88,7 @@ describe('Filtering by $regex', () => {
     afterAll(async () => {
         const dir = testStorage['directory'];
         const dirPath = `${process.cwd()}/${dir}`;
-        await fs.rmdir(dirPath, { recursive: true });
+        await fs.rm(dirPath, { recursive: true });
     });
 
     it('By search term', async () => {
@@ -141,7 +141,7 @@ describe('Filtering by $in', () => {
     afterAll(async () => {
         const dir = testStorage['directory'];
         const dirPath = `${process.cwd()}/${dir}`;
-        await fs.rmdir(dirPath, { recursive: true });
+        await fs.rm(dirPath, { recursive: true });
     });
 
     it('By string field equal to one of the array strings', async () => {
@@ -201,7 +201,7 @@ describe('Filtering by $nin', () => {
     afterAll(async () => {
         const dir = testStorage['directory'];
         const dirPath = `${process.cwd()}/${dir}`;
-        await fs.rmdir(dirPath, { recursive: true });
+        await fs.rm(dirPath, { recursive: true });
     });
 
     it('By array field not containing word "ring"', async () => {
@@ -317,7 +317,7 @@ describe('Filtering by math comparison: $ne, $gt, $gte, $lt, $lte', () => {
     afterAll(async () => {
         const dir = testStorage['directory'];
         const dirPath = `${process.cwd()}/${dir}`;
-        await fs.rmdir(dirPath, { recursive: true });
+        await fs.rm(dirPath, { recursive: true });
     });
 
     it('By number field not equal ($ne)', async () => {
@@ -400,7 +400,7 @@ describe('Filtering by combining filters with $and', () => {
     afterAll(async () => {
         const dir = testStorage['directory'];
         const dirPath = `${process.cwd()}/${dir}`;
-        await fs.rmdir(dirPath, { recursive: true });
+        await fs.rm(dirPath, { recursive: true });
     });
 
     it('From $gt to $lt', async () => {
@@ -489,7 +489,7 @@ describe('Filtering by combining filters with $or', () => {
     afterAll(async () => {
         const dir = testStorage['directory'];
         const dirPath = `${process.cwd()}/${dir}`;
-        await fs.rmdir(dirPath, { recursive: true });
+        await fs.rm(dirPath, { recursive: true });
     });
 
     it('To $lt, and then from $gt', async () => {
@@ -564,7 +564,7 @@ describe('Filtering by combining filters with $not', () => {
     afterAll(async () => {
         const dir = testStorage['directory'];
         const dirPath = `${process.cwd()}/${dir}`;
-        await fs.rmdir(dirPath, { recursive: true });
+        await fs.rm(dirPath, { recursive: true });
     });
 
     it('To $lt, and then from $gt, but not 92', async () => {

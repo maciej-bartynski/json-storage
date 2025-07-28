@@ -1,6 +1,6 @@
 
-import fs from 'fs/promises';
-import JSONStorage from '@/JSONStorage';
+import * as fs from 'fs/promises';
+import JSONStorage from '#src/JSONStorage.js';
 
 const TEST_DIRECTORY = 'testing_directory';
 
@@ -229,7 +229,7 @@ describe('FileStorage data/testing_directory CRUD should work', () => {
     });
 
     it('return all files', async () => {
-        await fs.rmdir(`${process.cwd()}/${TEST_DIRECTORY}`, { recursive: true });
+        await fs.rm(`${process.cwd()}/${TEST_DIRECTORY}`, { recursive: true });
         const storage = await testStorage.connect();
 
         await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/test-file-1.json`, JSON.stringify({

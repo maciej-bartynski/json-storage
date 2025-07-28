@@ -1,7 +1,7 @@
-import fs from "fs/promises";
-import { JSONStorageDocument, Filter } from "./JSONStorage.types";
+import * as fs from "fs/promises";
+import { JSONStorageDocument, Filter } from "#src/JSONStorage.types.js";
 import AsyncTasksQueue from "@bartek01001/async-tasks-queue";
-import crypto from "crypto";
+import * as crypto from "crypto";
 
 class JSONStorage {
     private directory: string;
@@ -80,13 +80,13 @@ class JSONStorage {
             await fs.writeFile(path, JSON.stringify({
                 ...data
             }), { flag: 'wx' });
-            await fs.rmdir(lockPath);
+            await fs.rm(lockPath);
             return {
                 _id,
                 path,
             }
         } catch (e) {
-            await fs.rmdir(lockPath);
+            await fs.rm(lockPath);
             throw e;
         }
     }
@@ -104,13 +104,13 @@ class JSONStorage {
         try {
             await fs.access(path, fs.constants.F_OK);
             await fs.writeFile(path, JSON.stringify(data), { flag: 'w' });
-            await fs.rmdir(lockPath);
+            await fs.rm(lockPath);
             return {
                 _id: fileId,
                 path,
             }
         } catch (e) {
-            await fs.rmdir(lockPath);
+            await fs.rm(lockPath);
             throw e;
         }
     }
@@ -139,9 +139,9 @@ class JSONStorage {
         try {
             await fs.access(path, fs.constants.F_OK);
             await fs.unlink(path);
-            await fs.rmdir(lockPath);
+            await fs.rm(lockPath);
         } catch (e) {
-            await fs.rmdir(lockPath);
+            await fs.rm(lockPath);
             throw e;
         }
     }
