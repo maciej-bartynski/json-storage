@@ -19,10 +19,6 @@ class JSONStorage {
         this.filter = this.filter.bind(this);
     }
 
-    /**
-     * Connect to the file storage with Promise-based locking
-     * @returns Promise with the storage interface
-     */
     async connect(): Promise<{
         create: (data: Record<string, any>) => Promise<{
             _id: string;
@@ -91,7 +87,10 @@ class JSONStorage {
         }
     }
 
-    private async update(fileId: string, data: Record<string, any>) {
+    private async update(fileId: string, data: Record<string, any>): Promise<{
+        _id: string;
+        path: string;
+    }> {
         const path = `${process.cwd()}/${this.directory}/${fileId}.json`;
         const lockPath = `${process.cwd()}/${this.directory}/${fileId}.lock`;
 
@@ -130,7 +129,7 @@ class JSONStorage {
         }
     }
 
-    private async delete(fileId: string) {
+    private async delete(fileId: string): Promise<void> {
         const path = `${process.cwd()}/${this.directory}/${fileId}.json`;
         const lockPath = `${process.cwd()}/${this.directory}/${fileId}.lock`;
 
@@ -146,7 +145,7 @@ class JSONStorage {
         }
     }
 
-    private async all() {
+    private async all(): Promise<JSONStorageDocument[]> {
         const dirPath = `${process.cwd()}/${this.directory}`;
         const fileEntries = await fs.readdir(dirPath, { withFileTypes: true });
         const jsonFiles = fileEntries.filter(file => file.isFile() && file.name.endsWith('.json'));
@@ -157,13 +156,13 @@ class JSONStorage {
                 const data = JSON.parse(content);
                 const stats = await fs.stat(filePath);
                 return {
-                    _id: file.name.replace('.json', ''),
                     ...data,
+                    _id: file.name.replace('.json', ''),
                     stats,
                 }
             })
         );
-        return fileContents;
+        return fileContents as JSONStorageDocument[];
     }
 
     private async filter(options: {
@@ -171,7 +170,7 @@ class JSONStorage {
         sort?: { field: string; order: 'asc' | 'desc' };
         limit?: number;
         offset?: number;
-    } = {}) {
+    } = {}): Promise<JSONStorageDocument[]> {
         function evaluateFilter(value: any, filter: Filter): boolean {
             if (filter.$gt !== undefined) return value > filter.$gt;
             if (filter.$gte !== undefined) return value >= filter.$gte;

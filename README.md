@@ -102,6 +102,7 @@ The library supports MongoDB-like filter operators:
 - **Lightweight**: Minimal dependencies, only requires Node.js built-ins
 - **CRUD Operations**: Complete Create, Read, Update, Delete functionality
 - **Sorting & Pagination**: Built-in support for sorting and limiting results
+- **ESM Support**: Modern ES modules support for Node.js
 
 ## API Reference
 

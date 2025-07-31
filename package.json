@@ -24,7 +24,7 @@
     "nodejs",
     "filesystem",
     "CRUD",
-    "nodejs"
+    "esm"
   ],
   "author": "bartek01001",
   "license": "MIT",
