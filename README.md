@@ -137,7 +137,55 @@ filter<T = any>(options: {
 }): Promise<JSONStorageDocument<T>[]>
 ```
 
+## Connection Errors
+
+The `connect()` method is designed to be resilient and will automatically create the storage directory if it doesn't exist. However, in rare cases, connection may fail due to system constraints.
+
+### When Errors Occur
+
+Connection errors typically happen when the directory cannot be created due to:
+
+- **Insufficient permissions** (`EACCES`) - The process lacks write permissions to create the directory
+- **Insufficient disk space** (`ENOSPC`) - No space available on the filesystem
+- **Invalid path** (`EINVAL`) - The directory path contains invalid characters or is malformed
+- **Other filesystem errors** - System-level constraints prevent directory creation
+
+### Error Handling Example
+
+```typescript
+import JSONStorage from '@bartek01001/json-storage';
+
+try {
+    const storage = new JSONStorage({ directory: './data' });
+    const connection = await storage.connect();
+    console.log('Connected successfully');
+} catch (error) {
+    if (error.code === 'EACCES') {
+        console.error('Permission denied: Cannot create directory');
+    } else if (error.code === 'ENOSPC') {
+        console.error('No disk space available');
+    } else if (error.code === 'EINVAL') {
+        console.error('Invalid directory path');
+    } else {
+        console.error('Connection failed:', error.message);
+    }
+}
+```
+
+### Resilient Design
+
+The `connect()` method uses a resilient approach:
+1. First checks if the directory exists and has proper permissions
+2. If not, automatically attempts to create the directory with all parent directories
+3. Only throws errors in specific failure scenarios where directory creation is impossible
+
+This design means that in most cases, the connection will succeed even if the directory doesn't exist initially.
+
 ## Error Handling
+
+### CRUD Operation Errors
+
+The library uses file locking to prevent concurrent access conflicts. When multiple operations try to access the same file simultaneously, one will succeed while others will fail with specific error codes.
 
 ```typescript
 try {
@@ -147,9 +195,22 @@ try {
         console.log('File already exists');
     } else if (error.code === 'ENOENT') {
         console.log('File not found');
+    } else if (error.code === 'EACCES') {
+        console.log('Permission denied');
     }
 }
 ```
+
+### Common Error Codes
+
+- **`EEXIST`** - File already exists (during create operation)
+- **`ENOENT`** - File not found (during read, update, or delete operations)
+- **`EACCES`** - Permission denied (insufficient file system permissions)
+- **`EISDIR`** - Path is a directory (rare, indicates file system corruption)
+
+### Concurrent Access
+
+The library prevents data corruption by using file locking. If multiple processes try to modify the same file simultaneously, only one will succeed while others will receive appropriate error codes.
 
 ## Development
 
