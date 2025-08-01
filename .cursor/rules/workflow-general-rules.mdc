@@ -1,0 +1,46 @@
+---
+description: Workflow general rules are described in this file
+globs:
+alwaysApply: true
+---
+
+# Workflow general rules
+This file describes rules You are ALWAYS obligated to follow: inside phases and outside them. These rules are referenced in other files as **Workflow general rules**. Definition of Workflow general rules is:
+
+Workflow general rules
+:   Those are rules:
+        
+        - You are obligated to follow guidelines from @README.md [README](./../../README.md).
+        
+        - You are obligated to follow guidelines from @DEVELOPMENT.md [README](./../../docs/DEVELOPMENT.md).
+       
+        - You are obligated to follow guidelines from @task-log.md [TASK](./../../docs/task-log.md).
+
+        - You are obligated to follow guidelines from @project-structure.mdc
+
+        - You are obligated to follow guidelines from @usage-and-api.mdc 
+        
+        - Before EVERY **Phase** (see @definitions.mdc) You are obligated to read again following files: @task-log.md, @README.md, @DEVELOPMENT.md.
+        
+        - Before EVERY **Phase** (see @definitions.mdc) You are obligated to check again all mandatory rules inside {root}/.cursor/rules directory.
+        
+        - You are obligated to follow official documentations and/or well-known best practises for technologies You are use. For example:
+            - For Typescript tasks: you can only follow Typescript official documentation, official guidelines, accepted Typescript-related answers from stackoverflow and well-known best typescript practises
+            - For Node.js tasks: you can only follow Node.js official documentation, official guidelines, accepted Node-related answers from stackoverflow and well-known best node practises.
+            - For Javascript tasks: you can only follow Javascript official documentation, ECMA Script standard, official guidelines, accepted Javascript-related answers from stackoverflow and well-known best Javascript practises and standards.
+            - For NPM packages (such as React or Express) you can only follow official documentations, README files from npm official packages, Homepages of those packages, ECMA Script standard for any frontend usage, best node practices for backend usage, official guidelines for coding, accepted package-related answers from stackoverflow and well-known best practises and standards.
+            - And many more examples: always follow official rules, solutions and docs. Never relay on shady, not-accepted by community, not bulletproof solutions.
+        
+        - You are always aware if You work with frontend or backend code. For backend, You are always aware if You work with ESM or CJS project. For frontend, you are always aware if You work with React or vanilla js or other framework/standard/approach. You develop solutions based on this knowledge.
+        
+        - You are always aware of exact NPM packages used in project - their name, documentation for exact version. You develop solutions based on this knowledge.
+        
+        - When You answer to My questions, You only use bullet-proof, 100% sure and correct answers. You never "figure-it-out" by Yourself and You never use made-up answers. You never use filler-language. If You don't know the correct answer, You simply admit that You don't know. This is MANDATORY.
+        
+        - When You create/edit code or project files, You only use bullet-proof, 100% correct code, architecture and approach. You never "figure-it-out" by Yourself and You never use made-up answers. You never use filler-language. If You don't know the correct solution, You simply admit that You don't know. This is MANDATORY.
+
+        - You are obligated to ask me questions if You don't understand what I demand from You.
+        
+        - You are obligated to ask me questions if You are not sure what I demand from You.
+        
+        - You are obligated to ask me questions if You "think" that You know what I demand from You, but You are not 100% sure.

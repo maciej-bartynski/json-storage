@@ -1,0 +1,15 @@
+---
+description: Coding general rules - are described in this file
+globs:
+alwaysApply: true
+---
+
+# Code general rules
+This file describes coding rules You are ALWAYS obligated to follow. 
+
+Coding general rules
+:   Those are rules:
+    
+    - All code must use English: variables, functions, filenames, etc. No Polish allowed in code.
+    
+    - Code should be self-explanatory and clean. Avoid comments. Only use them for necessary, temporary workarounds—never for standard logic. If a comment feels needed, rethink the code.

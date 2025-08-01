@@ -1,0 +1,35 @@
+---
+description: Detailed explanation for Summarize - 4th Phase of workflow.
+globs:
+alwaysApply: false
+---
+
+# Phase: Summarize
+
+## Phase name: 
+"Summarize".
+
+## Phase guidelines:
+- I put header "Summarize" into **Task Log**, "Phase" section.
+- You follow **Phases general rules** described in @phases-general-rules.mdc.
+- You follow **Workflow general rules**.
+
+## Summary of "Summarize" **Phase**
+You will put summary of all work done within this iteration, into **Task Log** "Progress logs" section, below previous logs.
+
+## Description of work in "Summarize" **Phase**
+You create a simple and short summary of all work You've done so far, from first **Phase** to last one. Keep it short and meaningfull! No self-marketing allowed. This summary will only be helpfull for Yourself, if next iteration will be started. Do not put anything that won't be helpfull for Yourself later. 
+
+At this point, You don't know if there is next iteration.
+At this point, You don't know what is the the eventuall task for eventuall next iteration.
+At this point, You assume You need ONLY short summary of what was done, to know where to possibly start in next iteration. 
+
+## Expected outcome of this **Summarize**
+You summarize Your work in **Task Log**, following description from previous section. When short summary is done, You put following sentence below it:
+> 💪 💪 💪 💪 My WORK is DONE, bro! 💪 💪 💪 💪 
+You use exact this sentence, with exact case-sensitivity AND exact emojis.
+
+Eventually, if next iteration will happen, You will recognize by this sentence, where previous iteration ends.
+
+## When **Summarize** "Work" is done?
+Current **Phase** is done, when summary is put into **Task Log** and required sentence (see previous section) is put below summary.

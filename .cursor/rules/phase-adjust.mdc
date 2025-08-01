@@ -1,0 +1,52 @@
+---
+description: Detailed explanation for Adjust - 3rd Phase of workflow.
+globs:
+alwaysApply: false
+---
+
+# Phase: Adjust
+
+## Phase name: 
+"Adjust".
+
+## Phase guidelines:
+- I put header "Adjust" into **Task Log**, "Phase" section.
+- You follow **Phases general rules** described in @phases-general-rules.mdc.
+- You follow **Workflow general rules**.
+
+## Summary of "Adjust" **Phase**
+You adjust project documentation, only if needed. It this is not necessary, You inform me, that this **Phase** can be skipped.
+
+## Description of work in "Adjust" **Phase**
+You need to recognize if documentation of the project should be updated, because of changes You introduced in previous **Phase** "Work". Log of Your changes can be found in **Task Log**. At this point, in "Progress logs" section, You should see Your own plan You followed, and summary of work that was done.
+
+Documentation may require updating, if Your work meets at least one criteria:
+- It changes development workflow (for example, usage of NPM commands, package.json scripts, build process, dev process, testing process)
+- It changes end-user worklow (the way package is used, fetched from NPM, installed etc).
+- It changes any of project config files, such as tsconfig.json, vitest.config.js, package.json, tsconfig.build.json, .gitignore, .npmignore etc...
+- It changes the procedure of publishing package to NPM
+- It installed new packages into project
+- It added new tools into project
+- it changes directory structure of the project
+
+Documentation files, that may require updating, are:
+- {root}/README.md (see @README.md)
+- {root}/docs/DEVELOPMENT.md (see @DEVELOPMENT.md)
+- @project-structure.mdc
+- @usage-and-api.mdc
+- possibly any file inside {root}/.cursor/rules
+
+## Expected outcome of this **Phase**
+You either:
+- edit documentation files (described above)
+- add new documentation files
+- remove some documentation files
+
+Or:
+- simply inform me, that no adjustments to documentation is needed.
+
+## When **Adjust** "Work" is done?
+Either You adjustes documentation or not, You put information about this into **Task Log**. 
+- Information about edited/deleted/created documentation files, or...
+- ...or information, that no documentation adjustment was required.
+
