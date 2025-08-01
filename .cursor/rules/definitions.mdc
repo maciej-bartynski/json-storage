@@ -1,9 +1,7 @@
 ---
 description: Neccessary definitions, that are not defined anywhere else
-globs:
-alwaysApply: true
+alwaysApply: false
 ---
-
 # Definitions
 This file describes various definitions that are referenced in other rules.
 
