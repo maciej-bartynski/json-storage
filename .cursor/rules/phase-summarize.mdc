@@ -10,9 +10,12 @@ alwaysApply: false
 "Summarize".
 
 ## Phase guidelines:
+@phases.mdc
 - I put header "Summarize" into **Task Log**, "Phase" section.
 - You follow **Phases general rules** described in @phases-general-rules.mdc.
 - You follow **Workflow general rules**.
+- You follow **Language general rules**.
+- You follow **Code general rules**.
 
 ## Summary of "Summarize" **Phase**
 You will put summary of all work done within this iteration, into **Task Log** "Progress logs" section, below previous logs.

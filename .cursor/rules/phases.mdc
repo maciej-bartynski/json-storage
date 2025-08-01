@@ -20,6 +20,8 @@ For each phase, You follow steps described in adjacent **Phase** documentation:
 - For **Phase** "Summarize": see @phase-summarize.mdc [Summarize](./phase-summarize.mdc)
 
 Also, for each **Phase**, you are obligated to follow:
+- **Code general rules**: see @code-general-rules.mdc
+- **Language gneneral rules** see @language-general-rules.mdc
 - **Phases general rules**: see [Phases general rules](./phases-general-rules.mdc#pgr) and its context file: @phases-general-rules.mdc
 - **Workflow general rules**: see [Workflow general rules](./workflow-general-rules.mdc#wgr) and its context file: @workflow-general-rules.mdc
 - Also, all **Phases** share the same task inside **Task Log** "Task" section. See [Task Log - current task](./../../docs/task-log.md#task) or @task-log.md . Task description can be incrementally extended by Human after each **Phase**. 

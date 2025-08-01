@@ -10,9 +10,12 @@ alwaysApply: false
 "Adjust".
 
 ## Phase guidelines:
+@phases.mdc
 - I put header "Adjust" into **Task Log**, "Phase" section.
 - You follow **Phases general rules** described in @phases-general-rules.mdc.
 - You follow **Workflow general rules**.
+- You follow **Language general rules**.
+- You follow **Code general rules**.
 
 ## Summary of "Adjust" **Phase**
 You adjust project documentation, only if needed. It this is not necessary, You inform me, that this **Phase** can be skipped.

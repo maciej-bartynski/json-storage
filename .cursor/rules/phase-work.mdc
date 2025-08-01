@@ -10,9 +10,12 @@ alwaysApply: false
 "Work".
 
 ## Phase guidelines:
+@phases.mdc
 - I put header "Work" into **Task Log**, "Phase" section.
 - You follow **Phases general rules** described in @phases-general-rules.mdc.
 - You follow **Workflow general rules**.
+- You follow **Language general rules**.
+- You follow **Code general rules**.
 - You follow Your detailer plan of work, created in previous **Phase** in **Task Log** in "Progress logs" section.
 - If there is no plan in "Progress logs" section of **Task Log**, You cannot proceed. You refuse. This is not optional.
 - If there is no acceptance word (see @phase-analyze.mdc for exact word), You refuse to proceed. This is not optional.

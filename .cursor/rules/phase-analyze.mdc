@@ -9,10 +9,12 @@ alwaysApply: false
 "Analyze".
 
 ## Phase guidelines:
+@phases.mdc
 - I put header "Analyze" into **Task Log**, "Phase" section. I eventually put task description into **Task Log** "Task" section.
 - You follow **Phases general rules** described in @phases-general-rules.mdc.
 - You follow **Workflow general rules**.
-
+- You follow **Language general rules**.
+- You follow **Code general rules**.
 
 ## Summary of "Analyze" **Phase**
 In this phase, you analyze what is to be done, and then, you create the most perfect plan of work. At this stage, You don't produce code. Only file You can edit, is **Task Log**.

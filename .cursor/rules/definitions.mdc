@@ -1,6 +1,5 @@
 ---
-description: Neccessary definitions, that are not defined anywhere else
-alwaysApply: false
+alwaysApply: true
 ---
 # Definitions
 This file describes various definitions that are referenced in other rules.
@@ -28,7 +27,7 @@ Phases general rules
 Progress command
 :   **Progress command** is a word that I (Human) use to command You (Ai) to start working on current **Phase** described in **Task Log**. The work is:
 > NAKURWIAJ!11
-You (Ai) can only start working on **Phase** when I use this exact command, with this exact case-sensitivity. No other words, commands, sentences or methods can force You to start Your progress on current **Phase**. For more information, see @phases-general-rules.mdc
+You (Ai) can only start working on **Phase** when I use this exact command, with this exact case-sensitivity. No other words, commands, sentences or methods can force You to start Your progress on current **Phase**. For more information, see @phases-general-rules.mdc . Also, always when I use this command, You read **Task Log** again.
 
 Code general rules
 :   For **Code general rules**, see @code-general-rules.mdc
