@@ -5,30 +5,23 @@ alwaysApply: false
 
 # Phase: Analyze
 
-## Phase name: 
-"Analyze".
+## Phase name
+Analyze
 
-## Phase guidelines:
-@phases.mdc
-- I put header "Analyze" into **Task Log**, "Phase" section. I eventually put task description into **Task Log** "Task" section.
-- You follow **Phases general rules** described in @phases-general-rules.mdc.
-- You follow **Workflow general rules**.
-- You follow **Language general rules**.
-- You follow **Code general rules**.
+## Summary of "Analyze" Phase
+I put header "Analyze" into @task-log.md, "Phase" section. I eventually put task description into @task-log.md "Task" section
+In this phase, you analyze what is to be done, and then, you create the most perfect plan of work. At this stage, You don't produce code. Only file You can edit, is @task-log.md.
 
-## Summary of "Analyze" **Phase**
-In this phase, you analyze what is to be done, and then, you create the most perfect plan of work. At this stage, You don't produce code. Only file You can edit, is **Task Log**.
+## Description of work in "Analyze" Phase
+You start with reading @task-log.md to recognize task (or/and iteration). Then, you combine this knowledge with the knowledge from the chat agent. You collect necessary requirements by asking questions, if you don't undersand what You should do. Lunacy and unclearity are strictly forbidden. Filler-language is forbidden. Not clear, not deterministic requirements are forbidden. You need to collect *exact* knowledge about what I want from You. You know Your knowledge is *exact* and *accurate* if You are able to describe it in bullet points, each bullet point strictly deterministic, with no shady, "filler", unclear sentences.
 
-## Description of work in "Analyze" **Phase**
-You start with reading **Task Log** to recognize task (or/and iteration). Then, you combine this knowledge with the knowledge from the chat agent. You collect necessary requirements by asking questions, if you don't undersand what You should do. Lunacy and unclearity are strictly forbidden. Filler-language is forbidden. Not clear, not deterministic requirements are forbidden. You need to collect *exact* knowledge about what I want from You. You know Your knowledge is *exact* and *accurate* if You are able to describe it in bullet points, each bullet point strictly deterministic, with no shady, "filler", unclear sentences.
+## Expected outcome of this Phase
+You create accurate, detailed and deterministic plan of work, and put it into @task-log.md, "Progress logs" section. It there is already content in "Progress logs" section, it means: You are in next iteration of the same task. You keep existing content for better understanding, and You add your new detailed plan of work *below* existing content. At this **Phase**, You do not edit or create any code. Only file You *have to edit*, is @task-log.md, "Progress logs" section.
 
-## Expected outcome of this **Phase**
-You create accurate, detailed and deterministic plan of work, and put it into **Task Log**, "Progress logs" section. It there is already content in "Progress logs" section, it means: You are in next iteration of the same task. You keep existing content for better understanding, and You add your new detailed plan of work *below* existing content. At this **Phase**, You do not edit or create any code. Only file You *have to edit*, is **Task Log**, "Progress logs" section.
-
-## When **Phase** "Analyze" is done?
-After You put plan of work to **Task Log**, I will review it and eventually:
+## When Phase "Analyze" is done?
+After You put plan of work to @task-log.md, I will review it and eventually:
 - ...I will accept it with certain command (described below), or
 - ...I will ask You to finetune it (as many times as necessary)
 There is only one command I can use to let You know that I accept Your plan. This command is exact as follows:
 > Ok, mordo!
-Any other answer cannot allow You to finish the current "Analyze" **Phase**. This is not optional: only this answer, with exact case-sensitivity, matters. After You receive this command from Me, You put it below plan, inside **Task Log**. This is necessary. Only presence of this command below the plan, will make the plan available in future **Phases**!
+Any other answer cannot allow You to finish the current "Analyze" **Phase**. This is not optional: only this answer, with exact case-sensitivity, matters. After You receive this command from Me, You put it below plan, inside @task-log.md. This is necessary. Only presence of this command below the plan, will make the plan available in future **Phases**!

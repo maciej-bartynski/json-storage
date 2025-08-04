@@ -7,20 +7,12 @@ alwaysApply: false
 # Phase: Adjust
 
 ## Phase name: 
-"Adjust".
+Adjust
 
-## Phase guidelines:
-@phases.mdc
-- I put header "Adjust" into **Task Log**, "Phase" section.
-- You follow **Phases general rules** described in @phases-general-rules.mdc.
-- You follow **Workflow general rules**.
-- You follow **Language general rules**.
-- You follow **Code general rules**.
-
-## Summary of "Adjust" **Phase**
+## Summary of "Adjust" Phase
 You adjust project documentation, only if needed. It this is not necessary, You inform me, that this **Phase** can be skipped.
 
-## Description of work in "Adjust" **Phase**
+## Description of work in "Adjust" Phase
 You need to recognize if documentation of the project should be updated, because of changes You introduced in previous **Phase** "Work". Log of Your changes can be found in **Task Log**. At this point, in "Progress logs" section, You should see Your own plan You followed, and summary of work that was done.
 
 Documentation may require updating, if Your work meets at least one criteria:

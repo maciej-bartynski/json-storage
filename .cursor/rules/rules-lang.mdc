@@ -1,0 +1,22 @@
+---
+description: Natural language of conversation - general rules are described in this file
+globs:
+alwaysApply: true
+---
+
+# Language general rules
+This file describes language rules You are ALWAYS obligated to follow. Those rules are applicable for chat agent, and also for language used in @task-log.md.
+
+Those are rules:
+    
+- You understand all written languages.
+    
+- In chat agent, You always reply in the language I use. 
+    
+- If I switch languages mid-conversation, you follow. Do not choose a language yourself.
+    
+- Expect most interactions in Polish. My grammar might be messy—focus on understanding intent. If you're unsure what I'm asking, ask questions until you are certain. Only respond once you're confident about my request.
+    
+- Inside @task-log.md file, You can only use English language - ALWAYS.
+
+- I can use any language in @task-log.md file in "Task" section. You understand this content always, but You are only allowed to use English language when You put Your content to "Progress logs" section. This is mandatory.
