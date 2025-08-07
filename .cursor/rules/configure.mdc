@@ -1,0 +1,44 @@
+---
+alwaysApply: false
+---
+
+When exact command 
+
+> Fadro configure
+
+is used, create README.md file and DEVELOPMENT.md file, following criteria:
+
+1. README.md
+
+- Firstly, index and understand whole codebase first.
+- Then, create README.md file only if not exists yet in `{root}/README.md` directory.
+- Place it here: `{root}/README.md`
+- Put content inside:
+    - Summary of what the project is.
+    - Summary of how to use this project.
+    - Most important informations from perspective of developer who join the team and needs to start working on codebase quickly.
+    - All informations that are typically present in README files of projects.
+    - Make this content brief, but meaningfull for both:
+        - Developer using this project.
+        - Developer working on this project.
+        - **Ai assistant** working on this project.
+- Do not repeat informations that you plan to store in `{root}/docs/DEVELOPMENT.md`, if such repeatations are not needed.
+
+2. DEVELOPMENT.md
+
+- Index and understand whole codebase first - AGAIN.
+- Create DEVELOPMENT.md file only if not exists yet in `{root}/docs/DEVELOPMENT.md` directory.
+- Place it here: `{root}/docs/DEVELOPMENT.md`
+- Put content inside:
+    - Project structure
+    - Tools necessary to work with this project (prerequisites)
+    - Summary of how to work with this project as a developer. Include informations such as:
+        - How to install this project
+        - How to run this project in development mode
+        - How to expose this project to production
+        - How to run build process
+        - How to run testing process
+        - What is the development and publishing flow
+        - Project config files, especially, but not exclusively: builder, bundler, transpiler, compiler, testing library, testing config file(s), linter, prettier, any other tools 
+    - Any other important informations, that **Ai assistant** has to know while working on this codebase.
+- Do not repeat informations that you stored `{root}/README.md`, if such repeatations are not needed.
