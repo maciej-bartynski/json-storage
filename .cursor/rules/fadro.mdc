@@ -1,0 +1,120 @@
+---
+alwaysApply: true
+---
+
+Fadro is a framework, that organises work with current codebase, into well defined Phases. Relay on this framework entirely, when working with codebase. Fadro is described in this file.
+
+# Fadro workflow
+Fadro operates in following phases, one by one:
+1. Analyse
+2. Implement
+3. Adjust
+4. Summarise
+Those Phases are controlled exclusively by `{root}/docs/task-log.md` file. Current Phase is always put in "Phase" section of `{root}/docs/task-log.md` - see: [Task Log](../../docs/task-log.md#Phase). When receive command: 
+> Proceed with Phase
+do Phase work.
+
+# Fadro core files:
+1. `{root}/README.md` - see [Readme.md](../../README.md)
+  - Required to understand the project
+  - Always read before any work
+  - Read frequently
+
+2. `{root}/docs/DEVELOPMENT.md` - see [DEVELOPMENT.md](../../docs/DEVELOPMENT.md)
+  - Required to understand project setup, tooling and development process
+  - Always read before any work
+  - Read frequently
+
+3. `{root}/docs/task-log.md` - see [task-log.md](../../docs/task-log.md)
+  - Current Phase is contained in "Phase" section
+  - Current task is described in "Task" section
+  - Current progress is described in "Progress logs" section
+  - Always read before any work
+  - Read frequently
+
+4. `{root}/.cursor/rules/**` - see [Cursor rules](../../.cursor/rules)
+  - Various rules to follow
+  - All rules are mandatory
+  - Always read before any work
+  - Read frequently
+
+# Detailed dscription of Fadro workflow
+
+Fadro flow summary:
+Phase Analyse (understand codebase docs and job to do, prepare a plan of work) → Phase Work (follow prepared plan) → Phase Adjust (update codebase docs or Fadro docs if need) → Phase Summarise (short but meaningfull summary of job done) → optional: start next iteration, with Analyse again.
+
+When prompted by exact command with exact case-sensitivity
+> Do Phase
+check file `{root}/docs/task-log.md`. Job should be described in "Task" section. Phase name should be set in "Phase" section. If those are not set, ask Ambitious Young Developer to fill sections. If all is set, recognize the current Phase name and follow instructions for that Phase: 
+
+1. Phase: Analyse
+- Understand `{root}/README.md`
+- Understand `{root}/docs/DEVELOPMENT.md`
+- Understand codebase
+- Understand `{root}/docs/task-log.md`
+- Understand task to do
+- Create plan of work on current task
+- Follow principles for plan of work: 
+  - Break plan into small steps
+  - Each step describes the exact deterministic objective
+  - Each step describes how exactly achieve the step objective
+  - Each step describes what directory(ies) and/or file(s) it will edit/deletes/create/read
+  - Each step describes what tools it will require or install
+  - All steps together lead to implement task fully
+- Put this plan to "Progress logs" section of `{root}/docs/task-log.md` file.
+- Ask your Ambitious Young Developer, if this plan meets requirements
+- Eventually, update plan
+- When Ambitious Young Developer finally accepts plan, add information about acceptance, to `{root}/docs/task-log.md`, below accepted plan.
+- When plan is accepted, Phase is finished.
+
+**1st important note**: in this Phase, do not create, edit or delete ANY file other than `{root}/docs/task-log.md`. You can only read files to understand project. Edit only `{root}/docs/task-log.md`, "Progress logs" section.
+
+**2nd important note**: Sometimes, on this Phase, section "Progress logs" is already filled with content. If this content already contains accepted plan of work and accepted summary of work, this means: it is next iteration of the same task. Keep logs from previous iterations, for reference. Add new logs below old logs. Always understand, what is already done.
+
+2. Phase: Work
+- Refresh understanding of all **Fadro** core files
+- Refresh understanding of task described in `{root}/docs/task-log.md`, inside "Task" section,
+- Refresh understanding of plan of work, in `{root}/docs/task-log.md`, inside "Progress logs" section.
+- Check if plan is accepted, in `{root}/docs/task-log.md`, inside "Progress logs" section, below plan.
+- If plan is not accepted, ask Ambitious Yound Developer to accept it, or to start Fadro workflow again.
+- If plan is accepted, follow plan. You can edit/create/delete files and directories, if this is required by your plan.
+- At this stage, you cannot edit following:
+  - Plan inside "Progress logs" section, in `{root}/docs/task-log.md`
+  - Any **Fadro core files**, such as README.md, DEVELOPMENT.md, .cursor/rules/** etc.
+- This stage is for working on project, such as: codebase, project configuration, project tooling, and more.
+- Only when implement ALL plan steps, ask Ambitious Young Developer for acceptance of finishing current "Work" Phase. 
+- If Ambitious Young Developer allows to finish "Work" Phase, put information about finishing "Work" Phase to `{root}/docs/task-log.md`, below plan acceptance log.
+- Then, Phase "Work" is finished.
+
+**Important note**: Created code have to meet all **Coding Rules Criteria**. 
+
+3. Phase: Adjust
+- Recognize, if documentation of the project (**Fadro core files**) should be updated, based on changes introduced in previous Phases. **Fadro core files** documentation may require updating, if some of following criteria are met:
+  - Development workflow has changed. For example: usage of NPM commands, package.json scripts, building workflow, development workflow, testing workflow.
+  - If project is NPM package, and end-user worklow has changed. Specifically: the way package is used, fetched from NPM, installed, etc.
+  - Any of project config files has changed. Especially, but not exclusively: tsconfig.json, vitest.config.js, package.json, tsconfig.build.json, .gitignore, .npmignore etc.
+  - Procedure of publishing package to NPM has changed.
+  - New packages have been installed, or deleted from the project.
+  - New tools have been introduced, or deteled from the project.
+  - Directory structure has been changed.
+  - At least one of following files (which means: **Fadro core files**) do not describe the truth anymore:
+    - `{root}/README.md`
+    - `{root}/docs/DEVELOPMENT.md`
+    - `{root}/.cursor/rules/**`
+
+- If **Fadro core files** require updating, update it.
+- If **Fadro core files** do not require updating, skip it.
+- In both cases, put the description of what was done (or what was skipped) in this Phase, into `{root}/docs/task-log.md`, "Progress logs" section, below previous logs.
+- Wait for Ambitious Young Developer approval of ending this Phase.
+- Announce to Ambitious Young Developer, that Phase "Adjust" is done.
+
+4. Phase: Summarise
+- Prepare summary of all work done within all Phases
+  - Keep it short and meaningfull
+  - If there are any differences between previously prepared plan of work, and actuall implementation, describe it *clearly*. 
+  - List ALL directories and files that was changed, and why
+  - List ALL directories and files that was created, and why
+  - List ALL directories and files that was deleted, and why
+- Put this summary into `{root}/docs/task-log.md` file, "Progress logs" section, below previous logs.
+- Ask for acceptance of finishing this Phase.
+- If receive acceptance from Ambitious Young Developer, put information about received approval, below summary.

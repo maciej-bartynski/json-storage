@@ -25,6 +25,7 @@ json-storage/
 │   └── JSONStorage.filter.test.ts # Advanced filtering test suite
 ├── docs/
 │   └── DEVELOPMENT.md         # This file
+│   └── task-log.md            # Ai framework file
 ├── dist/                      # Transpiled JavaScript + type definitions. No code work here! This dir can be missing.
 ├── index.ts                   # Main export file
 ├── package.json               # NPM package configuration
