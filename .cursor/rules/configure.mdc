@@ -5,11 +5,19 @@ When exact command
 
 > Fadro configure
 
-is used, create README.md file and DEVELOPMENT.md file, following criteria:
+is used, create README.md file and DEVELOPMENT.md file. Do not operate in Phases and do not touch `{root}/docs/task-log.md` file. This is different than "Phase: Adjust" of Fadro workflow. Follow this rules:
 
 1. README.md
 
 - Firstly, index and understand whole codebase first.
+    - Understand if this is frontend or backend code, understand Javascrip syntax, standard version etc.
+    - Understand development flow, especially how to run project, how to refresh project, what tools are required etc.
+    - Understand testing flow, especially if it is connected to development flow or build flow, etc.
+    - Understand building flow.
+    - Understand exposing to production flow.
+    - Understand tools used within project.
+    - Understand package.json file and all other configuration files for all tools, expecially (but not exclusively) build tools, reloading tools, testing tools etc...
+    - Understand many more, expecially (but not exclusively) everything.
 - Then, create README.md file only if not exists yet in `{root}/README.md` directory.
 - Place it here: `{root}/README.md`
 - Put content inside:
@@ -21,6 +29,7 @@ is used, create README.md file and DEVELOPMENT.md file, following criteria:
         - Developer using this project.
         - Developer working on this project.
         - **Ai assistant** working on this project.
+- Organize content in understandable, short, meaningful README documentation.
 - Do not repeat informations that you plan to store in `{root}/docs/DEVELOPMENT.md`, if such repeatations are not needed.
 
 2. DEVELOPMENT.md
@@ -32,6 +41,13 @@ is used, create README.md file and DEVELOPMENT.md file, following criteria:
     - Project structure
     - Tools necessary to work with this project (prerequisites)
     - Summary of how to work with this project as a developer. Include informations such as:
+        - If this is frontend or backend code, understand Javascrip syntax, standard version etc.
+        - Development flow, especially how to run project, how to refresh project, what tools are required etc.
+        - Testing flow, especially if it is connected to development flow or build flow, etc.
+        - Building flow.
+        - Exposing to production flow.
+        - Tools used within project.
+        - Package.json file and all other configuration files for all tools, expecially (but not exclusively) build tools, reloading tools, testing tools etc...
         - How to install this project
         - How to run this project in development mode
         - How to expose this project to production
@@ -40,4 +56,5 @@ is used, create README.md file and DEVELOPMENT.md file, following criteria:
         - What is the development and publishing flow
         - Project config files, especially, but not exclusively: builder, bundler, transpiler, compiler, testing library, testing config file(s), linter, prettier, any other tools 
     - Any other important informations, that **Ai assistant** has to know while working on this codebase.
+- Organize content in understandable, short, meaningful instruction.
 - Do not repeat informations that you stored `{root}/README.md`, if such repeatations are not needed.
