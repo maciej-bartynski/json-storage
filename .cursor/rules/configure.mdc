@@ -9,7 +9,7 @@ is used, create README.md file and DEVELOPMENT.md file. Do not operate in Phases
 
 1. README.md
 
-- Firstly, index and understand whole codebase first.
+- Firstly, index and understand whole codebase.
     - Understand if this is frontend or backend code, understand Javascrip syntax, standard version etc.
     - Understand development flow, especially how to run project, how to refresh project, what tools are required etc.
     - Understand testing flow, especially if it is connected to development flow or build flow, etc.
