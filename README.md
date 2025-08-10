@@ -1,15 +1,17 @@
-# JSON Storage
+# @bartek01001/json-storage
 
-A lightweight Node.js service for managing CRUD operations on JSON files with MongoDB-like filtering capabilities.
+A Node.js service for managing CRUD operations on JSON files with MongoDB-like filtering capabilities.
 
-## Features
+## Overview
 
-- **CRUD Operations**: Create, read, update, and delete JSON documents
-- **MongoDB-like Filtering**: Advanced querying with comparison operators, array operators, and logical operators
-- **Concurrent Access Protection**: File-level locking mechanism prevents data corruption
-- **TypeScript Support**: Full TypeScript definitions included
-- **ESM Module**: Modern ES modules support
-- **Zero Dependencies**: Minimal external dependencies
+JSON Storage provides a simple, file-based storage solution that mimics database operations. It automatically handles file locking, concurrent access control, and provides a familiar query interface similar to MongoDB.
+
+**Key Features:**
+- Full CRUD operations (Create, Read, Update, Delete)
+- MongoDB-like filtering with operators ($eq, $gt, $lt, $in, $regex, etc.)
+- Automatic file locking for concurrent access safety
+- TypeScript support with full type definitions
+- ESM module format
 
 ## Installation
 
@@ -22,44 +24,47 @@ npm install @bartek01001/json-storage
 ```typescript
 import JSONStorage from '@bartek01001/json-storage';
 
+// Initialize storage
 const storage = new JSONStorage({ directory: './data' });
-const connection = await storage.connect();
+
+// Connect and get CRUD interface
+const db = await storage.connect();
 
 // Create a document
-const result = await connection.create({
+const user = await db.create({
   name: 'John Doe',
   email: 'john@example.com',
   age: 30
 });
 
 // Read a document
-const document = await connection.read(result._id);
+const userDoc = await db.read(user._id);
 
 // Update a document
-await connection.update(result._id, { age: 31 });
-
-// Delete a document
-await connection.delete(result._id);
-
-// Get all documents
-const allDocuments = await connection.all();
+await db.update(user._id, { age: 31 });
 
 // Filter documents
-const filtered = await connection.filter({
-  where: { age: { $gte: 25 } },
-  sort: { field: 'name', order: 'asc' },
-  limit: 10
+const adults = await db.filter({
+  where: { age: { $gte: 18 } },
+  sort: { field: 'age', order: 'desc' }
 });
+
+// Delete a document
+await db.delete(user._id);
 ```
 
-## Filtering Operators
+## Technical Stack
 
-- **Comparison**: `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`
-- **Array**: `$in`, `$nin`
-- **String**: `$regex`
-- **Logical**: `$and`, `$or`, `$not`
+- **Language**: TypeScript 5.8.3
+- **Runtime**: Node.js (ES2024 target)
+- **Module System**: ESM
+- **Testing**: Vitest
+- **Build Tool**: TypeScript Compiler
+
+## Documentation
+
+For detailed development setup, testing, and deployment instructions, see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
 ## License
 
 MIT
-

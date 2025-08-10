@@ -1,128 +1,246 @@
 # Development Guide
 
-## Project Overview
+Complete technical guide for developing, maintaining, and deploying the JSON Storage package.
 
-This is a **backend Node.js package** written in **TypeScript** that provides CRUD operations for JSON file storage with MongoDB-like filtering capabilities.
+## Quick Development Path
+
+**For developers in a hurry - complete workflow in 3 steps:**
+
+### 1. Setup & First Run
+```bash
+npm install
+npm run build
+npm run test
+```
+
+### 2. Make Changes & Test
+```bash
+# Edit source files in src/
+npm run build          # Compile changes
+npm run test          # Verify everything works
+```
+
+### 3. Deploy to Production
+```bash
+npm version patch     # Bump version
+npm publish          # Builds automatically via prepublishOnly
+```
+
+**That's it!** For detailed explanations, see sections below.
+
+## Prerequisites
+
+- Node.js 18+ (ES2024 support required)
+- npm 9+
+
+## Local Development Setup
+
+Install dependencies:
+```bash
+npm install
+```
 
 ## Project Structure
 
 ```
 json-storage/
-├── data/                    # Storage directory for JSON files
-├── docs/                    # Project documentation
-├── src/                     # Source code
-│   ├── JSONStorage.ts       # Main storage class
-│   └── JSONStorage.types.ts # TypeScript type definitions
-├── tests/                   # Test files
-│   ├── JSONStorge.test.ts   # CRUD operations tests
-│   └── JSONStorage.filter.test.ts # Filtering functionality tests
-├── index.ts                 # Main entry point
-├── package.json             # NPM package configuration
-├── tsconfig.json           # TypeScript configuration
-├── tsconfig.build.json     # Build-specific TypeScript config
-└── vitest.config.ts        # Vitest testing configuration
+├── src/                    # Source code
+│   ├── JSONStorage.ts     # Main storage class
+│   └── JSONStorage.types.ts # Type definitions
+├── tests/                  # Test files
+├── dist/                   # Build output (generated)
+├── index.ts               # Main entry point
+├── tsconfig.json          # TypeScript configuration
+├── tsconfig.build.json    # Build-specific TypeScript config
+└── vitest.config.ts       # Test configuration
 ```
-
-## Prerequisites
-
-- **Node.js** (version 18 or higher)
-- **NPM** (comes with Node.js)
-- **TypeScript** (installed as dev dependency)
-
-## Development Setup
-
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-2. **Run tests**:
-   ```bash
-   npm test
-   ```
-
-3. **Run tests in watch mode**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Build the project**:
-   ```bash
-   npm run build
-   ```
-
-## Technology Stack
-
-- **Language**: TypeScript (ES2024 target)
-- **Module System**: ESM (ES Modules)
-- **Testing Framework**: Vitest
-- **Build Tool**: TypeScript Compiler
-- **Package Manager**: NPM
-
-## Configuration Files
-
-### TypeScript Configuration
-
-- **tsconfig.json**: Main TypeScript configuration with path mapping and strict settings
-- **tsconfig.build.json**: Build-specific config that excludes tests
-
-### Testing Configuration
-
-- **vitest.config.ts**: Vitest configuration with Node.js environment and single-threaded execution
-
-### Package Configuration
-
-- **package.json**: NPM package with ESM module type, build scripts, and dependencies
 
 ## Development Workflow
 
-### Code Structure
+### Available Scripts
 
-The main class `JSONStorage` provides:
-- **Connection management** with directory validation
-- **CRUD operations** (create, read, update, delete)
-- **Advanced filtering** with MongoDB-like syntax
-- **Concurrent access protection** using file locks
+- **`npm run dev`** - Start Vitest in watch mode for development
+- **`npm run test`** - Run all tests once
+- **`npm run build`** - Compile TypeScript to JavaScript
+- **`npm run prepublishOnly`** - Build before publishing (automatic)
 
-### Testing Strategy
+### Development Mode
 
-- **Unit tests** for all CRUD operations
-- **Integration tests** for filtering functionality
-- **Concurrent access tests** to ensure thread safety
-- **Test isolation** with separate directories for each test suite
+```bash
+npm run dev
+```
 
-### Build Process
+**IMPORTANT**: This requires `dist/` folder to exist. Always run `npm run build` first.
 
-1. **TypeScript compilation** with declaration files
-2. **Source maps** generation for debugging
-3. **Path mapping** for clean imports
-4. **ESM module** output
+**What it does:**
+- Starts Vitest in watch mode
+- Automatically re-runs tests when files change
+- **Tests run against built code** in `dist/` folder
+- **Does NOT auto-rebuild** - you must manually rebuild after source changes
 
-### Publishing Process
+**Development Workflow:**
+1. Make changes to source code
+2. Run `npm run build` to compile
+3. Tests automatically re-run against new build
+4. Repeat
 
-1. **Build** the project (`npm run build`)
-2. **Run tests** to ensure quality (`npm test`)
-3. **Publish** to NPM (`npm publish`)
+### Testing
 
-## Key Features
+```bash
+npm run test
+```
 
-- **File-based storage** with JSON documents
-- **MongoDB-like filtering** with operators ($eq, $ne, $gt, $gte, $lt, $lte, $in, $nin, $regex, $and, $or, $not)
-- **Concurrent access protection** using lock directories
-- **TypeScript support** with full type definitions
-- **ESM module** for modern Node.js applications
+**IMPORTANT**: Tests run against **built code** in `dist/` folder, not source code.
 
-## Dependencies
+**Test Configuration:**
+- **Framework**: Vitest 3.2.4
+- **Environment**: Node.js
+- **Execution**: Single-threaded, sequential (no concurrency)
+- **Timeout**: 10 seconds per test
+- **Test Target**: Compiled JavaScript in `dist/src/` (via `#src` alias)
+- **Coverage**: Tests verify the actual compiled output that users will consume
 
-- **@bartek01001/async-tasks-queue**: For managing concurrent operations
-- **@types/node**: TypeScript definitions for Node.js
-- **typescript**: TypeScript compiler
-- **vitest**: Testing framework
+**Test Files:**
+- `tests/JSONStorage.test.ts` - Core CRUD operations and connection tests
+- `tests/JSONStorage.filter.test.ts` - Advanced filtering and query tests
 
-## Development Commands
+**Why Test Built Code?**
+- Ensures TypeScript compilation produces working JavaScript
+- Tests the exact code that will be published to NPM
+- Catches build-time errors during development
 
-- `npm test` - Run all tests
-- `npm run dev` - Run tests in watch mode
-- `npm run build` - Build the project
-- `npm run prepublishOnly` - Build before publishing
+### Building
 
+```bash
+npm run build
+```
+
+**Build Process:**
+1. TypeScript compilation using `tsconfig.build.json`
+2. Output directory: `dist/`
+3. Generates: JavaScript files, type definitions, source maps
+4. Excludes test files from build
+
+**Build Configuration:**
+- **Target**: ES2024
+- **Module**: NodeNext
+- **Output**: `dist/` directory
+- **Declaration files**: Enabled
+- **Source maps**: Enabled
+
+## TypeScript Configuration
+
+### Main Config (`tsconfig.json`)
+- Includes source and test files
+- Path mapping for `#src/*` aliases
+- Vitest globals enabled
+
+### Build Config (`tsconfig.build.json`)
+- Extends main config
+- Excludes test files
+- Used for production builds
+
+## Code Architecture
+
+### Core Components
+
+**JSONStorage Class**
+- Main storage service with CRUD operations
+- Automatic directory creation and permission handling
+- Connection queue for concurrent access control
+
+**File Operations**
+- Atomic file operations with lock directories
+- UUID generation for document IDs
+- Error handling for filesystem operations
+
+**Filtering System**
+- MongoDB-like query operators
+- Support for comparison, array, string, and logical operators
+- Sorting and pagination capabilities
+
+### Concurrency Control
+
+- **AsyncTasksQueue**: Prevents concurrent initialization
+- **Lock Directories**: File-level locking for CRUD operations
+- **Single-threaded Tests**: Ensures deterministic test execution
+
+## Publishing
+
+### Pre-publish Process
+
+```bash
+npm run prepublishOnly
+```
+
+Automatically runs build before publishing to ensure latest code is compiled.
+
+### Package Configuration
+
+- **Main Entry**: `dist/index.js`
+- **Type Definitions**: `dist/index.d.ts`
+- **Files Included**: `dist/` directory and `README.md`
+- **Access**: Public NPM package
+
+### Version Management
+
+- Update version in `package.json`
+- Run `npm publish` to release
+- Package automatically builds before publishing
+
+## Environment and Dependencies
+
+### Production Dependencies
+- `@bartek01001/async-tasks-queue` - Concurrency control
+
+### Development Dependencies
+- `@bartek01001/fadro` - Development framework
+- `@types/node` - Node.js type definitions
+- `typescript` - TypeScript compiler
+- `vitest` - Testing framework
+
+## Development Workflow Details
+
+### Critical Development Process
+
+**IMPORTANT**: Tests run against the **built code** in `dist/` folder, not source code directly. This means:
+
+1. **Before running tests**: You must build the project first
+2. **Development workflow**: Build → Test → Modify → Build → Test
+3. **Vitest configuration**: Points to `dist/src` via alias `#src`
+
+### Why This Architecture?
+
+- Tests verify the **actual compiled output** that will be published
+- Ensures TypeScript compilation works correctly
+- Catches build-time errors during development
+- Tests the exact code that users will consume
+
+### Correct Development Sequence
+
+```bash
+# 1. Build the project
+npm run build
+
+# 2. Run tests against built code
+npm run test
+
+# 3. For development with auto-rebuild:
+npm run dev
+```
+
+**Note**: `npm run dev` (Vitest watch mode) will fail if `dist/` folder doesn't exist. Always build first.
+
+### Common Development Issues
+
+**Tests Fail with Import Errors**
+- **Cause**: `dist/` folder missing or outdated
+- **Solution**: Run `npm run build` before `npm run test`
+
+**Vitest Cannot Resolve #src Aliases**
+- **Cause**: Build output missing
+- **Solution**: Ensure `dist/src/` contains compiled JavaScript files
+
+**TypeScript Errors in Tests**
+- **Cause**: Tests import from `#src/*.js` (built code), not source
+- **Solution**: Build project to generate `dist/` folder

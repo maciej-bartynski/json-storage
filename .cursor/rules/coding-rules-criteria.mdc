@@ -18,3 +18,12 @@ alwaysApply: true
 - Be always aware of exact NPM packages used in project - their name, documentation for exact version. Base on this knowledge.   
 - Only use bullet-proof code and architecture 
 - Never "figure-it-out" solutions by Yourself, never use made-up answers, never use filler-language. Admit You don't know, if You don't know.
+
+## Documentation and Testing Rules
+- **NEVER** create documentation sections without verification
+- **ALWAYS** test documentation examples before declaring them complete
+- **If testing reveals errors**: Document them and ask user how to proceed
+- **Content quality**: No made-up information
+- **Avoid obvious content**: Skip overly basic instructions (e.g., "Clone the repository")
+- **Proactive verification**: Test workflows, commands, and examples proactively
+
