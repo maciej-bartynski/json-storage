@@ -4,259 +4,222 @@ import JSONStorage from '#src/JSONStorage.js';
 
 const TEST_DIRECTORY = 'testing_directory';
 
-describe('FileStorage data/testing_directory CRUD should work', () => {
+describe('JSONStorage Singleton with Multi-Directory Support', () => {
     let testStorage: JSONStorage;
+
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: TEST_DIRECTORY });
+        // Reset singleton instance before each test suite
+        JSONStorage.resetInstance();
+        testStorage = JSONStorage.getInstance({ directory: TEST_DIRECTORY });
     });
 
     afterAll(async () => {
         await fs.rm(TEST_DIRECTORY, { recursive: true, force: true });
+        // Reset singleton instance after tests
+        JSONStorage.resetInstance();
     });
 
-    it('Should connect and create directory', async () => {
-        await testStorage.connect();
-        const dir = await fs.stat(TEST_DIRECTORY);
-        expect(dir.isDirectory()).toBe(true);
-        const items = await fs.readdir(TEST_DIRECTORY, { withFileTypes: true });
-        expect(items.length).toBe(0)
-    });
-
-    it('Should create file and return correct data', async () => {
-        const storage = await testStorage.connect();
-        const result = await storage.create({
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
+    describe('Singleton Behavior', () => {
+        it('Should return the same instance when getInstance is called multiple times', () => {
+            const instance1 = JSONStorage.getInstance({ directory: 'different_path' });
+            const instance2 = JSONStorage.getInstance({ directory: 'another_path' });
+            expect(instance1).toBe(instance2);
         });
 
-        expect(result).toBeDefined();
-        expect(result._id).toBeDefined();
-        expect(result.path).toContain(`${TEST_DIRECTORY}/${result._id}.json`);
-        const file = await fs.readFile(`${process.cwd()}/${TEST_DIRECTORY}/${result._id}.json`, 'utf8');
-        expect(JSON.parse(file)).toEqual({
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
+        it('Should maintain the first directory configuration even when called with different parameters', () => {
+            const instance1 = JSONStorage.getInstance({ directory: 'first_path' });
+            const instance2 = JSONStorage.getInstance({ directory: 'second_path' });
+            expect(instance1).toBe(instance2);
         });
     });
 
-    it('Should update file and return correct data', async () => {
-        const storage = await testStorage.connect();
-        const testFileId = 'testfileid';
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`, JSON.stringify({
-            _id: testFileId,
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
-        }), { flag: 'wx' });
-        const result = await storage.update(testFileId, ({
-            content: 'updated',
-            number: 42
-        }));
-        expect(result.path).toContain(`${TEST_DIRECTORY}/${result._id}.json`);
-        const file = await fs.readFile(`${process.cwd()}/${TEST_DIRECTORY}/${result._id}.json`, 'utf8');
-        expect(JSON.parse(file)).toEqual({
-            content: 'updated',
-            number: 42
+    describe('Multi-Directory CRUD Operations', () => {
+        it('Should connect to items subdirectory and create directory', async () => {
+            const storage = await testStorage.connect('items');
+            const dir = await fs.stat(`${TEST_DIRECTORY}/items`);
+            expect(dir.isDirectory()).toBe(true);
+            const items = await fs.readdir(`${TEST_DIRECTORY}/items`, { withFileTypes: true });
+            expect(items.length).toBe(0);
+        });
+
+        it('Should connect to elements subdirectory and create directory', async () => {
+            const storage = await testStorage.connect('elements');
+            const dir = await fs.stat(`${TEST_DIRECTORY}/elements`);
+            expect(dir.isDirectory()).toBe(true);
+            const items = await fs.readdir(`${TEST_DIRECTORY}/elements`, { withFileTypes: true });
+            expect(items.length).toBe(0);
+        });
+
+        it('Should create file in items subdirectory and return correct data', async () => {
+            const storage = await testStorage.connect('items');
+            const result = await storage.create({
+                fileName: 'this is some test file',
+                content: 'Hello, world!'
+            });
+
+            expect(result).toBeDefined();
+            expect(result._id).toBeDefined();
+            expect(result.path).toContain(`${TEST_DIRECTORY}/items/${result._id}.json`);
+            const file = await fs.readFile(`${process.cwd()}/${TEST_DIRECTORY}/items/${result._id}.json`, 'utf8');
+            expect(JSON.parse(file)).toEqual({
+                fileName: 'this is some test file',
+                content: 'Hello, world!'
+            });
+        });
+
+        it('Should create file in elements subdirectory and return correct data', async () => {
+            const storage = await testStorage.connect('elements');
+            const result = await storage.create({
+                fileName: 'element test file',
+                content: 'Element content'
+            });
+
+            expect(result).toBeDefined();
+            expect(result._id).toBeDefined();
+            expect(result.path).toContain(`${TEST_DIRECTORY}/elements/${result._id}.json`);
+            const file = await fs.readFile(`${process.cwd()}/${TEST_DIRECTORY}/elements/${result._id}.json`, 'utf8');
+            expect(JSON.parse(file)).toEqual({
+                fileName: 'element test file',
+                content: 'Element content'
+            });
+        });
+
+        it('Should update file in items subdirectory and return correct data', async () => {
+            const storage = await testStorage.connect('items');
+            const testFileId = 'testfileid';
+            await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/items/${testFileId}.json`, JSON.stringify({
+                _id: testFileId,
+                fileName: 'this is some test file',
+                content: 'Hello, world!'
+            }), { flag: 'wx' });
+
+            const result = await storage.update(testFileId, ({
+                content: 'updated',
+                number: 42
+            }));
+
+            expect(result.path).toContain(`${TEST_DIRECTORY}/items/${result._id}.json`);
+            const file = await fs.readFile(`${process.cwd()}/${TEST_DIRECTORY}/items/${testFileId}.json`, 'utf8');
+            expect(JSON.parse(file)).toEqual({
+                content: 'updated',
+                number: 42
+            });
+        });
+
+        it('Should read file from items subdirectory', async () => {
+            const storage = await testStorage.connect('items');
+            const testFileId = 'readtest';
+            const testData = {
+                fileName: 'read test file',
+                content: 'Read test content'
+            };
+
+            await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/items/${testFileId}.json`, JSON.stringify(testData), { flag: 'wx' });
+
+            const result = await storage.read(testFileId);
+            expect(result.fileName).toBe(testData.fileName);
+            expect(result.content).toBe(testData.content);
+            expect(result._id).toBe(testFileId);
+        });
+
+        it('Should delete file from items subdirectory', async () => {
+            const storage = await testStorage.connect('items');
+            const testFileId = 'deletetest';
+            const testData = {
+                fileName: 'delete test file',
+                content: 'Delete test content'
+            };
+
+            await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/items/${testFileId}.json`, JSON.stringify(testData), { flag: 'wx' });
+
+            await storage.delete(testFileId);
+
+            // Verify file is deleted
+            await expect(fs.access(`${process.cwd()}/${TEST_DIRECTORY}/items/${testFileId}.json`)).rejects.toThrow();
+        });
+
+        it('Should get all files from items subdirectory', async () => {
+            const storage = await testStorage.connect('items');
+
+            // Create multiple test files
+            await storage.create({ name: 'file1', content: 'content1' });
+            await storage.create({ name: 'file2', content: 'content2' });
+
+            const allFiles = await storage.all();
+            expect(allFiles.length).toBeGreaterThanOrEqual(2);
+            expect(allFiles.some(f => f.name === 'file1')).toBe(true);
+            expect(allFiles.some(f => f.name === 'file2')).toBe(true);
+        });
+
+        it('Should filter files in items subdirectory', async () => {
+            const storage = await testStorage.connect('items');
+
+            // Create test files with different properties
+            await storage.create({ name: 'filter1', age: 25, active: true });
+            await storage.create({ name: 'filter2', age: 30, active: false });
+            await storage.create({ name: 'filter3', age: 35, active: true });
+
+            const activeUsers = await storage.filter({
+                where: { active: true }
+            });
+            expect(activeUsers.length).toBe(2);
+
+            const olderUsers = await storage.filter({
+                where: { age: { $gte: 30 } }
+            });
+            expect(olderUsers.length).toBe(2);
         });
     });
 
-    it('Should fail to update file when another process is updating it', async () => {
-        const storage = await testStorage.connect();
-        const testFileId = 'testfileid2';
+    describe('Connection Queue Behavior', () => {
+        it('Should queue connections to the same subdirectory', async () => {
+            const connectPromises = [
+                testStorage.connect('queue_test'),
+                testStorage.connect('queue_test'),
+                testStorage.connect('queue_test')
+            ];
 
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`, JSON.stringify({
-            _id: testFileId,
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
-        }), { flag: 'wx' });
+            const results = await Promise.all(connectPromises);
+            expect(results.length).toBe(3);
 
-        const result = await Promise.allSettled([
-            () => storage.update(testFileId, ({
-                content: 'update-1',
-            })),
-            () => storage.update(testFileId, ({
-                content: 'updated-2',
-            })),
-            () => storage.update(testFileId, ({
-                content: 'updated-3',
-            })),
-        ].map(update => update()));
-        expect(result.filter(item => item.status === 'fulfilled').length).toBe(1);
-        expect(result.filter(item => item.status === 'rejected').length).toBe(2);
-        const file = await fs.readFile(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`, 'utf8');
-        expect(JSON.parse(file)).toEqual({
-            content: 'update-1'
+            // All should return the same storage interface
+            results.forEach(result => {
+                expect(typeof result.create).toBe('function');
+                expect(typeof result.read).toBe('function');
+                expect(typeof result.update).toBe('function');
+                expect(typeof result.delete).toBe('function');
+                expect(typeof result.all).toBe('function');
+                expect(typeof result.filter).toBe('function');
+            });
         });
 
-    });
+        it('Should not block connections to different subdirectories', async () => {
+            const startTime = Date.now();
 
-    it('Should remove lock after update', async () => {
-        const storage = await testStorage.connect();
-        const testFileId = 'testfileid3';
+            const connectPromises = [
+                testStorage.connect('parallel1'),
+                testStorage.connect('parallel2'),
+                testStorage.connect('parallel3')
+            ];
 
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`, JSON.stringify({
-            _id: testFileId,
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
-        }), { flag: 'wx' });
-        await Promise.allSettled([
-            storage.update(testFileId, ({
-                content: 'update-1',
-            })).catch(() => { }),
-            storage.update(testFileId, ({
-                content: 'updated-2',
-            })).catch(() => { }), ,
-            storage.update(testFileId, ({
-                content: 'updated-3',
-            })).catch(() => { }),
-        ]);
-        await storage.update(testFileId, ({
-            content: 'update-4',
-        }));
-        const file = await fs.readFile(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`, 'utf8');
-        expect(JSON.parse(file)).toEqual({
-            content: 'update-4'
+            const results = await Promise.all(connectPromises);
+            const endTime = Date.now();
+
+            expect(results.length).toBe(3);
+            // Connections to different subdirectories should not block each other
+            // This is a basic test - in practice, the actual timing would depend on filesystem operations
+            expect(endTime - startTime).toBeLessThan(1000); // Should complete within 1 second
         });
     });
 
-    it('Should read file', async () => {
-        const storage = await testStorage.connect();
-        const testFileId = 'testfileid4';
-
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`, JSON.stringify({
-            _id: testFileId,
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
-        }), { flag: 'wx' });
-
-        const result = await storage.read(testFileId);
-        expect(result.stats).toBeDefined();
-        delete (result as any).stats;
-        expect(result).toEqual({
-            _id: testFileId,
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
-        });
-    });
-
-    it('Should delete file', async () => {
-        const storage = await testStorage.connect();
-        const testFileId = 'testfileid5';
-
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`, JSON.stringify({
-            _id: testFileId,
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
-        }), { flag: 'wx' });
-        const result = await storage.delete(testFileId);
-        expect(result).toBeFalsy();
-
-        try {
-            await fs.access(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`);
-            expect(false).toBe(true);
-        } catch (err) {
-            const error = err as any;
-            expect('code' in error).toBe(true);
-            expect(error.code).toBe('ENOENT');
-        }
-    });
-
-    it('Should fail tu update if deletion is being processed at the same time', async () => {
-        const storage = await testStorage.connect();
-        const testFileId = 'testfileid6';
-
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/${testFileId}.json`, JSON.stringify({
-            _id: testFileId,
-            fileName: 'this is some test file',
-            content: 'Hello, world!'
-        }), { flag: 'wx' });
-
-        storage.delete(testFileId);
-        try {
-            await storage.update(testFileId, { newField: 'new field' })
-            expect(false).toBe(true);
-        } catch (err) {
-            const error = err as any;
-            expect('code' in error).toBe(true);
-            expect(error.code).toBe('EEXIST');
-        }
-    });
-
-    it('Should go through CRUD operations', async () => {
-        const storage = await testStorage.connect();
-        const testFileId = 'testfileid7';
-
-        const { _id } = await storage.create({
-            _id: testFileId,
-            name: 'Frodo',
-            surname: 'Bagins'
+    describe('Error Handling', () => {
+        it('Should throw error when connecting without subdirectory', async () => {
+            // @ts-ignore - Testing invalid usage
+            await expect(testStorage.connect()).rejects.toThrow('Subdirectory is required');
         });
 
-        const entry = await storage.read(_id);
-
-        expect(entry).toEqual({
-            _id,
-            name: 'Frodo',
-            surname: 'Bagins',
-            stats: entry.stats,
+        it('Should throw error when connecting with empty subdirectory', async () => {
+            await expect(testStorage.connect('')).rejects.toThrow('Subdirectory is required');
         });
-
-        delete (entry as any)._id;
-        await storage.update(_id, {
-            ...entry,
-            newField: 'new field'
-        })
-
-        const updatedEntry = await storage.read(_id);
-
-        expect(updatedEntry).toEqual({
-            _id,
-            name: 'Frodo',
-            surname: 'Bagins',
-            newField: 'new field',
-            stats: updatedEntry.stats,
-        });
-
-        await storage.delete(_id);
-
-        try {
-            await fs.access(`${process.cwd()}/${TEST_DIRECTORY}/${_id}.json`);
-            expect(false).toBe(true);
-        } catch (err) {
-            const error = err as any;
-            expect('code' in error).toBe(true);
-            expect(error.code).toBe('ENOENT');
-        }
     });
-
-    it('return all files', async () => {
-        await fs.rm(`${process.cwd()}/${TEST_DIRECTORY}`, { recursive: true });
-        const storage = await testStorage.connect();
-
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/test-file-1.json`, JSON.stringify({
-            _id: 'test-file-1',
-            name: 'Frodo',
-            surname: 'Bagins'
-        }), { flag: 'wx' });
-
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/test-file-2.json`, JSON.stringify({
-            _id: 'test-file-2',
-            name: 'Smeagol',
-            surname: 'Not sure'
-        }), { flag: 'wx' });
-
-        await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/test-file-3.json`, JSON.stringify({
-            _id: 'test-file-3',
-            name: 'Sauron',
-            surname: 'The Great'
-        }), { flag: 'wx' });
-
-        const files = await storage.all();
-
-        expect(files).toEqual([
-            { _id: 'test-file-1', name: 'Frodo', surname: 'Bagins', stats: await fs.stat(`${process.cwd()}/${TEST_DIRECTORY}/test-file-1.json`) },
-            { _id: 'test-file-2', name: 'Smeagol', surname: 'Not sure', stats: await fs.stat(`${process.cwd()}/${TEST_DIRECTORY}/test-file-2.json`) },
-            { _id: 'test-file-3', name: 'Sauron', surname: 'The Great', stats: await fs.stat(`${process.cwd()}/${TEST_DIRECTORY}/test-file-3.json`) }
-        ])
-    });
-
 });

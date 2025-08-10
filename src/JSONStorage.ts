@@ -4,19 +4,27 @@ import AsyncTasksQueue from "@bartek01001/async-tasks-queue";
 import * as crypto from "crypto";
 
 class JSONStorage {
-    private directory: string;
-    private connectinQueue = new AsyncTasksQueue();
+    private static instance: JSONStorage | null = null;
+    private baseDirectory: string;
+    private subdirectoryQueues = new Map<string, AsyncTasksQueue>();
 
-    constructor(params: {
+    private constructor(params: {
         directory: string;
     }) {
-        this.directory = params.directory;
-        this.create = this.create.bind(this);
-        this.read = this.read.bind(this);
-        this.update = this.update.bind(this);
-        this.delete = this.delete.bind(this);
-        this.all = this.all.bind(this);
-        this.filter = this.filter.bind(this);
+        this.baseDirectory = params.directory;
+    }
+
+    public static getInstance(params: {
+        directory: string;
+    }): JSONStorage {
+        if (!JSONStorage.instance) {
+            JSONStorage.instance = new JSONStorage(params);
+        }
+        return JSONStorage.instance;
+    }
+
+    public static resetInstance(): void {
+        JSONStorage.instance = null;
     }
 
     /**
@@ -32,6 +40,7 @@ class JSONStorage {
      * if it doesn't exist, including all necessary parent directories. Errors are only
      * thrown in specific failure scenarios where the directory cannot be created.
      * 
+     * @param subdirectory - The subdirectory within the base directory to connect to
      * @returns Promise resolving to an object containing CRUD methods: create, read, update, delete, all, filter
      * @throws {Error} When directory is not set
      * @throws {Error} When directory cannot be created due to insufficient permissions (EACCES)
@@ -39,7 +48,7 @@ class JSONStorage {
      * @throws {Error} When path is invalid or contains invalid characters (EINVAL)
      * @throws {Error} When other filesystem errors prevent directory creation
      */
-    async connect(): Promise<{
+    async connect(subdirectory: string): Promise<{
         create: (data: Record<string, any>) => Promise<{
             _id: string;
             path: string;
@@ -59,26 +68,60 @@ class JSONStorage {
         }) => Promise<JSONStorageDocument<T>[]>;
     }> {
 
-        if (!this.directory) {
+        if (!this.baseDirectory) {
             throw new Error('Directory is not set');
         }
 
-        const toReturn = {
-            create: this.create,
-            read: this.read,
-            update: this.update,
-            delete: this.delete,
-            all: this.all,
-            filter: this.filter,
+        if (!subdirectory) {
+            throw new Error('Subdirectory is required');
         }
 
-        return this.connectinQueue.enqueue(async () => {
-            try {
-                await fs.access(this.directory, fs.constants.R_OK | fs.constants.W_OK);
-            } catch {
-                await fs.mkdir(this.directory, { recursive: true });
+        if (!this.subdirectoryQueues.has(subdirectory)) {
+            this.subdirectoryQueues.set(subdirectory, new AsyncTasksQueue());
+        }
+
+        const queue = this.subdirectoryQueues.get(subdirectory)!;
+        const fullDirectory = `${this.baseDirectory}/${subdirectory}`;
+
+        const crudInterface = {
+            create: async (data: Record<string, any>): Promise<{
+                _id: string;
+                path: string;
+            }> => {
+                return this.create(subdirectory, data);
+            },
+            read: async (fileName: string): Promise<JSONStorageDocument> => {
+                return this.read(subdirectory, fileName);
+            },
+            update: async (fileName: string, data: Record<string, any>): Promise<{
+                _id: string;
+                path: string;
+            }> => {
+                return this.update(subdirectory, fileName, data);
+            },
+            delete: async (fileName: string): Promise<void> => {
+                return this.delete(subdirectory, fileName);
+            },
+            all: async (): Promise<Record<string, any>[]> => {
+                return this.all(subdirectory);
+            },
+            filter: async <T = any>(options: {
+                where?: Record<string, Filter | string | number | boolean>;
+                sort?: { field: string; order: 'asc' | 'desc' };
+                limit?: number;
+                offset?: number;
+            } = {}): Promise<JSONStorageDocument<T>[]> => {
+                return this.filter(subdirectory, options);
             }
-            return toReturn;
+        };
+
+        return queue.enqueue(async () => {
+            try {
+                await fs.access(fullDirectory, fs.constants.R_OK | fs.constants.W_OK);
+            } catch {
+                await fs.mkdir(fullDirectory, { recursive: true });
+            }
+            return crudInterface;
         });
     }
 
@@ -98,13 +141,13 @@ class JSONStorage {
      * @throws {Error} When lock directory cannot be created (concurrent access)
      * @throws {Error} When file cannot be written
      */
-    private async create(data: Record<string, any>): Promise<{
+    private async create(subdirectory: string, data: Record<string, any>): Promise<{
         _id: string;
         path: string;
     }> {
         const _id = data._id || crypto.randomUUID();
-        const path = `${process.cwd()}/${this.directory}/${_id}.json`;
-        const lockPath = `${process.cwd()}/${this.directory}/${_id}.lock`;
+        const path = `${process.cwd()}/${this.baseDirectory}/${subdirectory}/${_id}.json`;
+        const lockPath = `${process.cwd()}/${this.baseDirectory}/${subdirectory}/${_id}.lock`;
 
         await fs.mkdir(lockPath);
 
@@ -141,12 +184,12 @@ class JSONStorage {
      * @throws {Error} When lock directory cannot be created (concurrent access)
      * @throws {Error} When file cannot be written
      */
-    private async update(fileId: string, data: Record<string, any>): Promise<{
+    private async update(subdirectory: string, fileId: string, data: Record<string, any>): Promise<{
         _id: string;
         path: string;
     }> {
-        const path = `${process.cwd()}/${this.directory}/${fileId}.json`;
-        const lockPath = `${process.cwd()}/${this.directory}/${fileId}.lock`;
+        const path = `${process.cwd()}/${this.baseDirectory}/${subdirectory}/${fileId}.json`;
+        const lockPath = `${process.cwd()}/${this.baseDirectory}/${subdirectory}/${fileId}.lock`;
 
         if (data._id) {
             throw new Error('Cannot update _id field');
@@ -180,8 +223,8 @@ class JSONStorage {
      * @throws {Error} When file cannot be read
      * @throws {Error} When file contains invalid JSON
      */
-    private async read(fileId: string): Promise<JSONStorageDocument> {
-        const path = `${process.cwd()}/${this.directory}/${fileId}.json`;
+    private async read(subdirectory: string, fileId: string): Promise<JSONStorageDocument> {
+        const path = `${process.cwd()}/${this.baseDirectory}/${subdirectory}/${fileId}.json`;
         try {
             const stats = await fs.stat(path);
             const data = await fs.readFile(path, 'utf8');
@@ -210,9 +253,9 @@ class JSONStorage {
      * @throws {Error} When lock directory cannot be created (concurrent access)
      * @throws {Error} When file cannot be deleted
      */
-    private async delete(fileId: string): Promise<void> {
-        const path = `${process.cwd()}/${this.directory}/${fileId}.json`;
-        const lockPath = `${process.cwd()}/${this.directory}/${fileId}.lock`;
+    private async delete(subdirectory: string, fileId: string): Promise<void> {
+        const path = `${process.cwd()}/${this.baseDirectory}/${subdirectory}/${fileId}.json`;
+        const lockPath = `${process.cwd()}/${this.baseDirectory}/${subdirectory}/${fileId}.lock`;
 
         await fs.mkdir(lockPath);
 
@@ -237,8 +280,8 @@ class JSONStorage {
      * @throws {Error} When directory cannot be read
      * @throws {Error} When any file contains invalid JSON
      */
-    private async all(): Promise<JSONStorageDocument[]> {
-        const dirPath = `${process.cwd()}/${this.directory}`;
+    private async all(subdirectory: string): Promise<JSONStorageDocument[]> {
+        const dirPath = `${process.cwd()}/${this.baseDirectory}/${subdirectory}`;
         const fileEntries = await fs.readdir(dirPath, { withFileTypes: true });
         const jsonFiles = fileEntries.filter(file => file.isFile() && file.name.endsWith('.json'));
         const fileContents = await Promise.all(
@@ -278,7 +321,7 @@ class JSONStorage {
      * @throws {Error} When any file contains invalid JSON
      * @throws {Error} When filter syntax is invalid
      */
-    private async filter(options: {
+    private async filter(subdirectory: string, options: {
         where?: Record<string, Filter | string | number | boolean>;
         sort?: { field: string; order: 'asc' | 'desc' };
         limit?: number;
@@ -314,7 +357,7 @@ class JSONStorage {
             return true;
         }
 
-        const dirPath = `${process.cwd()}/${this.directory}`;
+        const dirPath = `${process.cwd()}/${this.baseDirectory}/${subdirectory}`;
         const fileEntries = await fs.readdir(dirPath, { withFileTypes: true });
         const jsonFiles = fileEntries.filter(file => file.isFile() && file.name.endsWith('.json'));
 
