@@ -2,6 +2,31 @@
 alwaysApply: true
 ---
 
+# Fadro Workflow
+
+**Fadro** is a framework that organizes work with the current codebase into well-defined phases.  
+Always follow this framework completely when working with the codebase.  
+Fadro is fully described in this file.
+
+---
+
+## Phases Overview
+
+Fadro runs in the following phases, in order:
+
+1. **Analyse**  
+2. **Implement**
+3. **Adjust**  
+4. **Summarise**
+
+These phases are controlled **exclusively** by the file: `{root}/docs/task-log.md`.
+See: [Task Log](../../docs/task-log.md)
+
+The current phase is always stated in the **"Phase"** section of that file.  
+See: [Task Log – Phase Section](../../docs/task-log.md#Phase)
+
+---
+
 ## Fadro Core Files
 
 1. **`{root}/README.md`** — see [README.md](../../README.md)  

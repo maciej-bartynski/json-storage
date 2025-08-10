@@ -22,7 +22,7 @@ alwaysApply: true
 ## Documentation and Testing Rules
 - **NEVER** create documentation sections without verification
 - **ALWAYS** test documentation examples before declaring them complete
-- **If testing reveals errors**: Document them and ask user how to proceed
+- **If testing reveals errors**: Document them in task-log.md and ask user how to proceed
 - **Content quality**: No made-up information
 - **Avoid obvious content**: Skip overly basic instructions (e.g., "Clone the repository")
 - **Proactive verification**: Test workflows, commands, and examples proactively
