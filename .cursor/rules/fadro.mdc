@@ -17,9 +17,9 @@ Fadro runs in the following phases, in order:
 1. **Analyse**  
 2. **Implement**
 3. **Adjust Docs**  
-4. **Improve Fadro**  
-5. **Summarise**
-6. **Merge**
+4. **Summarise**
+5. **Merge**
+6. **Improve Fadro**  
 
 These phases are controlled **exclusively** by the file: `{root}/docs/task-log.md`.
 See: [Task Log](../../docs/task-log.md)
@@ -63,7 +63,7 @@ These files are project documentation - which is relevant even if Fadro not exis
 
 ## Fadro Flow Summary
 
-Phase **Analyse** → Phase **Implement** (execute plan) → Phase **Adjust Docs** (update docs if needed) → Phase **Improve Fadro** (update Fadro rules if needed) → Phase **Summarise** (concise summary of results) → Phase **Merge** (git operations) → *Optional*: start next iteration at **Analyse**.
+Phase **Analyse** → Phase **Implement** (execute plan) → Phase **Adjust Docs** (update docs if needed) → Phase **Summarise** (concise summary of results) → Phase **Merge** (git operations) → Phase **Improve Fadro** (update Fadro rules if needed) → *Optional*: start next iteration at **Analyse**.
 
 ---
 
@@ -118,6 +118,8 @@ When prompted with the **exact** case-sensitive command:
 4. When approved, record the approval directly below the plan in `{root}/docs/task-log.md`.
 5. The phase ends when the plan is approved.
 
+**CRITICAL**: Always add new logs at the END of the "Progress logs" section.
+
 **Important Notes:**
 - Do **not** create, edit, or delete any files except `{root}/docs/task-log.md` during this phase.
 - If the "Progress logs" already contain an accepted plan and summary, this is a new iteration of the same task — keep all previous logs and append new ones below them. Always read through previous logs, to understand, what is already done (or what didn't went well)
@@ -140,7 +142,7 @@ When prompted with the **exact** case-sensitive command:
 - The goal is to modify the project codebase, configuration, tooling, or related assets exactly as planned.
 - After completing all steps in the plan:
   1. Request approval from the **Ambitious Young Developer** to finish the phase.
-  2. Upon approval, log the completion in `{root}/docs/task-log.md` below the plan acceptance entry.
+  2. Upon approval, log the completion in `{root}/docs/task-log.md` at the END of the "Progress logs" section.
   3. Mark the phase as finished.
 
 **Important:** All code must meet **Coding Rules Criteria**.
@@ -163,13 +165,58 @@ When prompted with the **exact** case-sensitive command:
 **Workflow:**
 1. If updates are required, update the relevant **Docs Core Files**.
 2. If not required, skip updates.
-3. Log in `{root}/docs/task-log.md` ("Progress logs") what was done or skipped.
+3. Log in `{root}/docs/task-log.md` ("Progress logs") at the END of the section what was done or skipped.
 4. Request approval to finish the phase.
-5. Announce phase completion upon approval (in "Progress logs").
+5. Announce phase completion upon approval at the END of the "Progress logs" section.
 
 ---
 
-### 4. Phase: Improve Fadro
+### 4. Phase: Summarise
+
+- Write a concise but meaningful summary of all work completed in all phases.
+
+**Summary Must Include:**
+- Notable differences between the original plan and actual implementation.
+- A complete list of all directories/files:
+  - Changed (with reasons)
+  - Created (with reasons)
+  - Deleted (with reasons)
+
+**Workflow:**
+1. Add the summary to `{root}/docs/task-log.md` ("Progress logs") at the END of the section.
+2. Request approval to finish the phase.
+3. Upon approval, log the approval at the END of the "Progress logs" section.
+
+---
+
+### 5. Phase: Merge
+
+- Execute git operations to merge the task branch back to develop.
+
+**Git Operations Must Include:**
+1. **Commit Changes**: Ensure all changes are committed before proceeding (check git status)
+2. **Push Task Branch**: Push the current task branch to the remote repository.
+3. **Switch to Develop**: Checkout the "develop" branch.
+4. **Merge Task Branch**: Merge the task branch into develop.
+5. **Push Develop**: Push the updated develop branch to the remote repository.
+
+**Workflow:**
+1. Execute all git operations in sequence.
+2. Verify that merge was successful and no conflicts occurred.
+3. Confirm that develop branch is up to date with remote.
+4. Log the completion of merge operations in `{root}/docs/task-log.md` ("Progress logs") at the END of the section.
+5. Request approval to finish the phase.
+6. Upon approval, log the approval at the END of the "Progress logs" section.
+
+**Important Notes:**
+- This phase is separate from Summarise to give the user control over when git operations occur.
+- User can interrupt this phase at any time after accepting the completion of Summarise phase.
+- All git operations must be logged for transparency and debugging purposes.
+- **Note**: This phase now comes AFTER Summarise, so the user has already reviewed the summary before git operations begin.
+
+---
+
+### 6. Phase: Improve Fadro
 You MUST review the conversation history to identify patterns of repeated corrections, rule violations, or user frustration that indicate rules need improvement. This is the time for reflection on what went wrong and how to prevent it in the future. Then, fix or improve rules inside **Fadro Core Files**, ONLY if it is needed. Determine whether **Fadro Core Files** need updating due to whole conversation. Update for `{root}/.cursor/rules` may be necessary if any Fadro rule becomes too low specific, not clear or new rule is necessary. For example, if any of these occurred:
   - **Scenario 1**: Ambitious Young Developer asked, why one or more rules were violated: "Why this variable has polish name?", "Why didn't You checked correct Phase name?", "Why plan of work wasn't detailed enough in first attempt?". Meaning: possibly some rules need to be more specific or reworded.
   - **Scenario 2**: Ambitious Young Developer pointed out, that you weren't specific enough during coding, testing or creating docs. Meaning: possibly some docs or rules are missing and You don't understand codebase, or understand it wrongly.
@@ -184,49 +231,6 @@ You MUST review the conversation history to identify patterns of repeated correc
 **Workflow:**
 1. If updates are required, update the relevant Fadro Core Files.
 2. If not required, skip updates.
-3. Log in `{root}/docs/task-log.md` ("Progress logs") what was done or skipped.
+3. Log in `{root}/docs/task-log.md` ("Progress logs") at the END of the section what was done or skipped.
 4. Request approval to finish the phase.
-5. Announce phase completion upon approval (in "Progress logs").
-
----
-
-### 5. Phase: Summarise
-
-- Write a concise but meaningful summary of all work completed in all phases.
-
-**Summary Must Include:**
-- Notable differences between the original plan and actual implementation.
-- A complete list of all directories/files:
-  - Changed (with reasons)
-  - Created (with reasons)
-  - Deleted (with reasons)
-
-**Workflow:**
-1. Add the summary to `{root}/docs/task-log.md` ("Progress logs") below previous entries.
-2. Request approval to finish the phase.
-3. Upon approval, log the approval below the summary (in "Progress logs").
-
----
-
-### 6. Phase: Merge
-
-- Execute git operations to merge the task branch back to develop.
-
-**Git Operations Must Include:**
-1. **Push Task Branch**: Push the current task branch to the remote repository.
-2. **Switch to Develop**: Checkout the "develop" branch.
-3. **Merge Task Branch**: Merge the task branch into develop.
-4. **Push Develop**: Push the updated develop branch to the remote repository.
-
-**Workflow:**
-1. Execute all git operations in sequence.
-2. Verify that merge was successful and no conflicts occurred.
-3. Confirm that develop branch is up to date with remote.
-4. Log the completion of merge operations in `{root}/docs/task-log.md` ("Progress logs").
-5. Request approval to finish the phase.
-6. Upon approval, log the approval below the merge completion entry (in "Progress logs").
-
-**Important Notes:**
-- This phase is separate from Summarise to give the user control over when git operations occur.
-- User can interrupt this phase at any time after accepting the completion of Summarise phase.
-- All git operations must be logged for transparency and debugging purposes.
+5. Announce phase completion upon approval at the END of the "Progress logs" section.
