@@ -3,8 +3,9 @@ alwaysApply: true
 ---
 # Coding Rules Criteria
 - All code must use English language: variables, functions, filenames, etc. No Polish allowed in code.
-- Code must be self-explanatory without comments. 
-- Only use comments for, temporary workarounds — never for standard logic. If a comment feels needed, rethink the code.
+- **Code must be self-explanatory without comments** - This rule applies to ALL code files in the project (TypeScript, JavaScript, test files). No explanatory comments are allowed in any code.
+- **Only use comments for temporary workarounds — never for standard logic** - Standard logic includes test logic, and any non-temporary code explanations. This rule applies to ALL code files.
+- **If a comment feels needed, rethink the code** - This applies to all code contexts: production code, tests, examples, and configuration files. Make the code self-explanatory instead of adding comments.
 - All code must be covered by tests
 - All tests must be deterministic, with exact, well-defined assertions (no "this or possibly that" approach)
 - Prefer *reuse existing code* over *create new code*, whenever it is possible
@@ -26,4 +27,13 @@ alwaysApply: true
 - **Content quality**: No made-up information
 - **Avoid obvious content**: Skip overly basic instructions (e.g., "Clone the repository")
 - **Proactive verification**: Test workflows, commands, and examples proactively
+
+## Comment and Code Quality Rules
+- **NO COMMENTS IN CODE FILES**: The "no comments" rule applies to ALL code files (TypeScript, JavaScript, JSON, test files, configuration files)
+- **Test files are NOT exempt**: Test files must follow the same comment-free standards as production code
+- **Code examples in documentation CAN contain comments**: Code examples in README.md, DEVELOPMENT.md, and other documentation files can and should contain explanatory comments to help users understand the code
+- **Configuration files CAN contain comments**: Configuration files (tsconfig.json, package.json, etc.) can contain helpful comments to explain configuration options
+- **Markdown files (.md) CAN contain explanatory text**: README.md, DEVELOPMENT.md, etc. can have normal documentation text and code examples with helpful comments
+- **When in doubt, remove the comment**: If you're unsure whether a comment is allowed in code, remove it
+- **Code must explain itself**: Variable names, function names, and structure must make the code's purpose clear
 

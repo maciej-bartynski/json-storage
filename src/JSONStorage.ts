@@ -1,5 +1,5 @@
 import * as fs from "fs/promises";
-import { JSONStorageDocument, Filter } from "#src/JSONStorage.types.js";
+import { JSONStorageDocument, Filter, FileMetadata, DirectoryStats } from "#src/JSONStorage.types.js";
 import AsyncTasksQueue from "@bartek01001/async-tasks-queue";
 import * as crypto from "crypto";
 
@@ -40,15 +40,15 @@ class JSONStorage {
      * if it doesn't exist, including all necessary parent directories. Errors are only
      * thrown in specific failure scenarios where the directory cannot be created.
      * 
-     * @param subdirectory - The subdirectory within the base directory to connect to
-     * @returns Promise resolving to an object containing CRUD methods: create, read, update, delete, all, filter
+     * @param options - Connection options with directory and optional maxFileAmount
+     * @returns Promise resolving to an object containing CRUD methods: create, read, update, delete, all, filter, getStats
      * @throws {Error} When directory is not set
      * @throws {Error} When directory cannot be created due to insufficient permissions (EACCES)
      * @throws {Error} When directory cannot be created due to insufficient disk space (ENOSPC)
      * @throws {Error} When path is invalid or contains invalid characters (EINVAL)
      * @throws {Error} When other filesystem errors prevent directory creation
      */
-    async connect(subdirectory: string): Promise<{
+    async connect(options: string | { directory: string; maxFileAmount?: number }): Promise<{
         create: (data: Record<string, any>) => Promise<{
             _id: string;
             path: string;
@@ -66,7 +66,15 @@ class JSONStorage {
             limit?: number;
             offset?: number;
         }) => Promise<JSONStorageDocument<T>[]>;
+        getStats: () => Promise<DirectoryStats>;
     }> {
+        // Handle both string (backward compatibility) and object parameters
+        if (!options) {
+            throw new Error('Subdirectory is required');
+        }
+
+        const subdirectory = typeof options === 'string' ? options : options.directory;
+        const maxFileAmount = typeof options === 'string' ? undefined : options.maxFileAmount;
 
         if (!this.baseDirectory) {
             throw new Error('Directory is not set');
@@ -88,7 +96,12 @@ class JSONStorage {
                 _id: string;
                 path: string;
             }> => {
-                return this.create(subdirectory, data);
+                // Use createWithMaxAmountAllowed if maxFileAmount is set, otherwise use regular create
+                if (maxFileAmount !== undefined) {
+                    return this.createWithMaxAmountAllowed(subdirectory, data, maxFileAmount);
+                } else {
+                    return this.create(subdirectory, data);
+                }
             },
             read: async (fileName: string): Promise<JSONStorageDocument> => {
                 return this.read(subdirectory, fileName);
@@ -110,8 +123,59 @@ class JSONStorage {
                 sort?: { field: string; order: 'asc' | 'desc' };
                 limit?: number;
                 offset?: number;
-            } = {}): Promise<JSONStorageDocument<T>[]> => {
+            }) => {
                 return this.filter(subdirectory, options);
+            },
+            getStats: async (): Promise<DirectoryStats> => {
+                const dirPath = `${process.cwd()}/${this.baseDirectory}/${subdirectory}`;
+                const fileEntries = await fs.readdir(dirPath, { withFileTypes: true });
+                const jsonFiles = fileEntries.filter(file => file.isFile() && file.name.endsWith('.json'));
+
+                const fileStats = await Promise.all(
+                    jsonFiles.map(async (file) => {
+                        const filePath = `${dirPath}/${file.name}`;
+                        const stats = await fs.stat(filePath);
+                        const content = await fs.readFile(filePath, 'utf8');
+                        const fileData = JSON.parse(content);
+
+                        return {
+                            _id: fileData._id || file.name.replace('.json', ''),
+                            createdAt: stats.birthtime.toLocaleString('en-GB', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit'
+                            }),
+                            updatedAt: stats.mtime.toLocaleString('en-GB', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit'
+                            }),
+                            stats
+                        };
+                    })
+                );
+
+                // Sort by creation time (birthtime) - oldest first
+                const createdAsc = [...fileStats].sort((a, b) =>
+                    a.stats.birthtime.getTime() - b.stats.birthtime.getTime()
+                ).map(({ stats, ...rest }) => rest);
+
+                // Sort by modification time (mtime) - oldest first
+                const updatedAsc = [...fileStats].sort((a, b) =>
+                    a.stats.mtime.getTime() - b.stats.mtime.getTime()
+                ).map(({ stats, ...rest }) => rest);
+
+                return {
+                    amount: jsonFiles.length,
+                    createdAsc,
+                    updatedAsc
+                };
             }
         };
 
@@ -122,6 +186,83 @@ class JSONStorage {
                 await fs.mkdir(fullDirectory, { recursive: true });
             }
             return crudInterface;
+        });
+    }
+
+
+
+    /**
+     * Creates a new JSON document in the storage directory with file amount limit enforcement.
+     * 
+     * This method automatically manages the number of files in the subdirectory:
+     * 1. Counts current JSON files (excluding .lock files)
+     * 2. If over the limit, removes oldest files (by creation time)
+     * 3. Creates the new file
+     * 
+     * The method uses the existing AsyncTasksQueue to ensure sequential execution
+     * and prevent conflicts when multiple operations try to count files simultaneously.
+     * 
+     * @param subdirectory - The subdirectory to create the file in
+     * @param data - The data to store as JSON document
+     * @param maxFileAmount - Maximum number of files allowed in the subdirectory
+     * @returns Promise resolving to object containing _id and file path
+     * @throws {Error} When file operations fail
+     */
+    private async createWithMaxAmountAllowed(
+        subdirectory: string,
+        data: Record<string, any>,
+        maxFileAmount: number
+    ): Promise<{
+        _id: string;
+        path: string;
+    }> {
+        const queue = this.subdirectoryQueues.get(subdirectory)!;
+
+        return queue.enqueue(async () => {
+            if (maxFileAmount === 0) {
+                return {
+                    _id: data._id || crypto.randomUUID(),
+                    path: `${process.cwd()}/${this.baseDirectory}/${subdirectory}/${data._id || crypto.randomUUID()}.json`
+                };
+            }
+
+            const dirPath = `${process.cwd()}/${this.baseDirectory}/${subdirectory}`;
+            const fileEntries = await fs.readdir(dirPath, { withFileTypes: true });
+            const jsonFiles = fileEntries.filter(file => file.isFile() && file.name.endsWith('.json'));
+
+            if (jsonFiles.length >= maxFileAmount) {
+                const fileStats = await Promise.all(
+                    jsonFiles.map(async (file) => {
+                        const filePath = `${dirPath}/${file.name}`;
+                        const stats = await fs.stat(filePath);
+                        const content = await fs.readFile(filePath, 'utf8');
+                        const fileData = JSON.parse(content);
+
+                        return {
+                            _id: fileData._id || file.name.replace('.json', ''),
+                            stats
+                        };
+                    })
+                );
+
+                const createdAsc = [...fileStats].sort((a, b) =>
+                    a.stats.birthtime.getTime() - b.stats.birthtime.getTime()
+                );
+
+                const filesToRemove = jsonFiles.length - maxFileAmount + 1;
+
+                for (let i = 0; i < filesToRemove; i++) {
+                    const fileToRemove = createdAsc[i];
+                    if (fileToRemove) {
+                        try {
+                            await this.delete(subdirectory, fileToRemove._id);
+                        } catch {
+                        }
+                    }
+                }
+            }
+
+            return this.create(subdirectory, data);
         });
     }
 

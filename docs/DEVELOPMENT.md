@@ -48,6 +48,9 @@ json-storage/
 │   ├── JSONStorage.ts     # Main storage class
 │   └── JSONStorage.types.ts # Type definitions
 ├── tests/                  # Test files
+│   ├── JSONStorage.test.ts # Core functionality tests
+│   ├── JSONStorage.filter.test.ts # Filtering tests
+│   └── JSONStorage.maxFileAmount.test.ts # File limit management tests
 ├── dist/                   # Build output (generated)
 ├── index.ts               # Main entry point
 ├── tsconfig.json          # TypeScript configuration
@@ -98,6 +101,11 @@ npm run test
 - **Execution**: Single-threaded, sequential (no concurrency)
 - **Timeout**: 10 seconds per test
 - **Test Target**: Compiled JavaScript in `dist/src/` (via `#src` alias)
+
+**Test Files:**
+- **`JSONStorage.test.ts`**: Core CRUD operations and connection tests
+- **`JSONStorage.filter.test.ts`**: Advanced filtering and query operations
+- **`JSONStorage.maxFileAmount.test.ts`**: File limit management and statistics functionality
 - **Coverage**: Tests verify the actual compiled output that users will consume
 
 **Test Files:**

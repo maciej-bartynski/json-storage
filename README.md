@@ -13,6 +13,8 @@ JSON Storage provides a simple, file-based storage solution that mimics database
 - **Full CRUD Operations**: Create, Read, Update, Delete with MongoDB-like filtering
 - **Advanced Filtering**: Support for operators ($eq, $gt, $lt, $in, $regex, etc.)
 - **Automatic File Locking**: Concurrent access safety with lock directories
+- **File Limit Management**: Optional maxFileAmount parameter for automatic cleanup of oldest files
+- **Directory Statistics**: getStats method for file count and metadata analysis
 - **TypeScript Support**: Full type definitions and type safety
 - **ESM Module Format**: Modern ES modules support
 
@@ -33,6 +35,9 @@ const jsonStorage = JSONStorage.getInstance({ directory: './data' });
 // Connect to specific subdirectory and get CRUD interface
 const itemStorage = await jsonStorage.connect('items');
 const userStorage = await jsonStorage.connect('users');
+
+// Connect with file limit management
+const logStorage = await jsonStorage.connect({ directory: 'logs', maxFileAmount: 1000 });
 
 // Create a document
 const user = await itemStorage.create({
@@ -55,6 +60,11 @@ const adults = await itemStorage.filter({
 
 // Delete a document
 await itemStorage.delete(user._id);
+
+// Get directory statistics
+const stats = await itemStorage.getStats();
+console.log(`Directory contains ${stats.amount} files`);
+console.log('Oldest files:', stats.createdAsc.slice(0, 3));
 ```
 
 ## API Overview
@@ -75,8 +85,31 @@ const items = await jsonStorage.connect('items');
 const users = await jsonStorage.connect('users');
 const products = await jsonStorage.connect('products');
 
+// Connect with file limit management
+const logs = await jsonStorage.connect({ directory: 'logs', maxFileAmount: 1000 });
+
 // Operations on different subdirectories don't block each other
 // But operations on the same subdirectory are properly queued
+```
+
+### File Limit Management
+Automatically manage file counts in subdirectories with the `maxFileAmount` parameter:
+```typescript
+// Connect with automatic file cleanup
+const logStorage = await jsonStorage.connect({ 
+    directory: 'application-logs', 
+    maxFileAmount: 100 
+});
+
+// When creating new files, oldest files are automatically removed
+// to maintain the specified limit
+await logStorage.create({ message: 'New log entry', timestamp: Date.now() });
+
+// Get current statistics
+const stats = await logStorage.getStats();
+console.log(`Directory contains ${stats.amount} files`);
+console.log('Files sorted by creation time:', stats.createdAsc);
+console.log('Files sorted by modification time:', stats.updatedAsc);
 ```
 
 ## Technical Stack

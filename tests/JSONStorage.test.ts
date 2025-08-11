@@ -198,8 +198,7 @@ describe('JSONStorage Singleton with Multi-Directory Support', () => {
 
     describe('Error Handling', () => {
         it('Should throw error when connecting without subdirectory', async () => {
-            // @ts-ignore - Testing invalid usage
-            await expect(testStorage.connect()).rejects.toThrow('Subdirectory is required');
+            await expect(testStorage.connect(undefined as any)).rejects.toThrow('Subdirectory is required');
         });
 
         it('Should throw error when connecting with empty subdirectory', async () => {
