@@ -18,6 +18,7 @@ Fadro runs in the following phases, in order:
 2. **Implement**
 3. **Adjust**  
 4. **Summarise**
+5. **Merge**
 
 These phases are controlled **exclusively** by the file: `{root}/docs/task-log.md`.
 See: [Task Log](../../docs/task-log.md)
@@ -55,7 +56,7 @@ See: [Task Log – Phase Section](../../docs/task-log.md#Phase)
 
 ## Fadro Flow Summary
 
-Phase **Analyse** → Phase **Implement** (execute plan) → Phase **Adjust** (update docs if needed) → Phase **Summarise** (concise summary of results) → *Optional*: start next iteration at **Analyse**.
+Phase **Analyse** → Phase **Implement** (execute plan) → Phase **Adjust** (update docs if needed) → Phase **Summarise** (concise summary of results) → Phase **Merge** (git operations) → *Optional*: start next iteration at **Analyse**.
 
 ---
 
@@ -90,6 +91,9 @@ When prompted with the **exact** case-sensitive command:
   - `{root}/docs/task-log.md`
   - The current task
 - Create a **work plan** for the current task.
+- **Git Branch Check**: Verify you are on the "develop" branch. If not, ask if you can switch to it. DO NOT SWITCH WITHOUT PERMISSION. NEVER.
+- **Create Task Branch**: Create a new git branch for the current task (e.g., `feature/task-name` or `fix/issue-description`) based on the task content.
+- **Switch to Task Branch**: Immediately checkout the newly created task branch.
 
 **Work Plan Requirements:**
 - Break the plan into small, sequential steps.
@@ -182,3 +186,28 @@ When prompted with the **exact** case-sensitive command:
 1. Add the summary to `{root}/docs/task-log.md` ("Progress logs") below previous entries.
 2. Request approval to finish the phase.
 3. Upon approval, log the approval below the summary (in "Progress logs").
+
+---
+
+### 5. Phase: Merge
+
+- Execute git operations to merge the task branch back to develop.
+
+**Git Operations Must Include:**
+1. **Push Task Branch**: Push the current task branch to the remote repository.
+2. **Switch to Develop**: Checkout the "develop" branch.
+3. **Merge Task Branch**: Merge the task branch into develop.
+4. **Push Develop**: Push the updated develop branch to the remote repository.
+
+**Workflow:**
+1. Execute all git operations in sequence.
+2. Verify that merge was successful and no conflicts occurred.
+3. Confirm that develop branch is up to date with remote.
+4. Log the completion of merge operations in `{root}/docs/task-log.md` ("Progress logs").
+5. Request approval to finish the phase.
+6. Upon approval, log the approval below the merge completion entry (in "Progress logs").
+
+**Important Notes:**
+- This phase is separate from Summarise to give the user control over when git operations occur.
+- User can interrupt this phase at any time after accepting the completion of Summarise phase.
+- All git operations must be logged for transparency and debugging purposes.
