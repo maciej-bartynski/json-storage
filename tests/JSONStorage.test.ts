@@ -8,14 +8,12 @@ describe('JSONStorage Singleton with Multi-Directory Support', () => {
     let testStorage: JSONStorage;
 
     beforeAll(async () => {
-        // Reset singleton instance before each test suite
         JSONStorage.resetInstance();
         testStorage = JSONStorage.getInstance({ directory: TEST_DIRECTORY });
     });
 
     afterAll(async () => {
         await fs.rm(TEST_DIRECTORY, { recursive: true, force: true });
-        // Reset singleton instance after tests
         JSONStorage.resetInstance();
     });
 
@@ -129,19 +127,13 @@ describe('JSONStorage Singleton with Multi-Directory Support', () => {
                 fileName: 'delete test file',
                 content: 'Delete test content'
             };
-
             await fs.writeFile(`${process.cwd()}/${TEST_DIRECTORY}/items/${testFileId}.json`, JSON.stringify(testData), { flag: 'wx' });
-
             await storage.delete(testFileId);
-
-            // Verify file is deleted
             await expect(fs.access(`${process.cwd()}/${TEST_DIRECTORY}/items/${testFileId}.json`)).rejects.toThrow();
         });
 
         it('Should get all files from items subdirectory', async () => {
             const storage = await testStorage.connect('items');
-
-            // Create multiple test files
             await storage.create({ name: 'file1', content: 'content1' });
             await storage.create({ name: 'file2', content: 'content2' });
 
@@ -153,8 +145,6 @@ describe('JSONStorage Singleton with Multi-Directory Support', () => {
 
         it('Should filter files in items subdirectory', async () => {
             const storage = await testStorage.connect('items');
-
-            // Create test files with different properties
             await storage.create({ name: 'filter1', age: 25, active: true });
             await storage.create({ name: 'filter2', age: 30, active: false });
             await storage.create({ name: 'filter3', age: 35, active: true });
@@ -181,8 +171,6 @@ describe('JSONStorage Singleton with Multi-Directory Support', () => {
 
             const results = await Promise.all(connectPromises);
             expect(results.length).toBe(3);
-
-            // All should return the same storage interface
             results.forEach(result => {
                 expect(typeof result.create).toBe('function');
                 expect(typeof result.read).toBe('function');
@@ -201,14 +189,10 @@ describe('JSONStorage Singleton with Multi-Directory Support', () => {
                 testStorage.connect('parallel2'),
                 testStorage.connect('parallel3')
             ];
-
             const results = await Promise.all(connectPromises);
             const endTime = Date.now();
-
             expect(results.length).toBe(3);
-            // Connections to different subdirectories should not block each other
-            // This is a basic test - in practice, the actual timing would depend on filesystem operations
-            expect(endTime - startTime).toBeLessThan(1000); // Should complete within 1 second
+            expect(endTime - startTime).toBeLessThan(1000);
         });
     });
 
