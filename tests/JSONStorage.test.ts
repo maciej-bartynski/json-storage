@@ -96,6 +96,7 @@ describe('JSONStorage Singleton with Multi-Directory Support', () => {
                 number: 42
             }));
 
+            expect(result._id).toBe(testFileId)
             expect(result.path).toContain(`${TEST_DIRECTORY}/items/${result._id}.json`);
             const file = await fs.readFile(`${process.cwd()}/${TEST_DIRECTORY}/items/${testFileId}.json`, 'utf8');
             expect(JSON.parse(file)).toEqual({
