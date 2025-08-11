@@ -16,10 +16,8 @@ Fadro runs in the following phases, in order:
 
 1. **Analyse**  
 2. **Implement**
-3. **Adjust Docs**  
+3. **Adjust**  
 4. **Summarise**
-5. **Merge**
-6. **Improve Fadro**  
 
 These phases are controlled **exclusively** by the file: `{root}/docs/task-log.md`.
 See: [Task Log](../../docs/task-log.md)
@@ -29,25 +27,7 @@ See: [Task Log – Phase Section](../../docs/task-log.md#Phase)
 
 ---
 
-## Core Files
-
-### Fadro Core Files
-These files regulate Fadro framework:
-
-1. **`{root}/docs/task-log.md`** — see [task-log.md](../../docs/task-log.md)  
-   - "Phase" section: current phase name.  
-   - "Task" section: current task description.  
-   - "Progress logs" section: current progress and logs.  
-   - Always read before starting work.  
-   - Re-read frequently.
-
-2. **`{root}/.cursor/rules/**`** — see [Cursor rules](../../.cursor/rules)  
-   - Mandatory rules for all work.  
-   - Always read before starting work.  
-   - Re-read frequently.
-
-### Docs Core Files
-These files are project documentation - which is relevant even if Fadro not exist in project:
+## Fadro Core Files
 
 1. **`{root}/README.md`** — see [README.md](../../README.md)  
    - Required to understand the project.  
@@ -59,11 +39,23 @@ These files are project documentation - which is relevant even if Fadro not exis
    - Always read before starting work.  
    - Re-read frequently.
 
+3. **`{root}/docs/task-log.md`** — see [task-log.md](../../docs/task-log.md)  
+   - "Phase" section: current phase name.  
+   - "Task" section: current task description.  
+   - "Progress logs" section: current progress and logs.  
+   - Always read before starting work.  
+   - Re-read frequently.
+
+4. **`{root}/.cursor/rules/**`** — see [Cursor rules](../../.cursor/rules)  
+   - Mandatory rules for all work.  
+   - Always read before starting work.  
+   - Re-read frequently.
+
 ---
 
 ## Fadro Flow Summary
 
-Phase **Analyse** → Phase **Implement** (execute plan) → Phase **Adjust Docs** (update docs if needed) → Phase **Summarise** (concise summary of results) → Phase **Merge** (git operations) → Phase **Improve Fadro** (update Fadro rules if needed) → *Optional*: start next iteration at **Analyse**.
+Phase **Analyse** → Phase **Implement** (execute plan) → Phase **Adjust** (update docs if needed) → Phase **Summarise** (concise summary of results) → *Optional*: start next iteration at **Analyse**.
 
 ---
 
@@ -98,9 +90,6 @@ When prompted with the **exact** case-sensitive command:
   - `{root}/docs/task-log.md`
   - The current task
 - Create a **work plan** for the current task.
-- **Git Branch Check**: Verify you are on the "develop" branch. If not, ask if you can switch to it. DO NOT SWITCH WITHOUT PERMISSION. NEVER.
-- **Create Task Branch**: Create a new git branch for the current task (e.g., `feature/task-name` or `fix/issue-description`) based on the task content.
-- **Switch to Task Branch**: Immediately checkout the newly created task branch.
 
 **Work Plan Requirements:**
 - Break the plan into small, sequential steps.
@@ -117,8 +106,6 @@ When prompted with the **exact** case-sensitive command:
 3. Update the plan as needed until it is approved.
 4. When approved, record the approval directly below the plan in `{root}/docs/task-log.md`.
 5. The phase ends when the plan is approved.
-
-**CRITICAL**: Always add new logs at the END of the "Progress logs" section.
 
 **Important Notes:**
 - Do **not** create, edit, or delete any files except `{root}/docs/task-log.md` during this phase.
@@ -142,16 +129,17 @@ When prompted with the **exact** case-sensitive command:
 - The goal is to modify the project codebase, configuration, tooling, or related assets exactly as planned.
 - After completing all steps in the plan:
   1. Request approval from the **Ambitious Young Developer** to finish the phase.
-  2. Upon approval, log the completion in `{root}/docs/task-log.md` at the END of the "Progress logs" section.
+  2. Upon approval, log the completion in `{root}/docs/task-log.md` below the plan acceptance entry.
   3. Mark the phase as finished.
 
 **Important:** All code must meet **Coding Rules Criteria**.
 
 ---
 
-### 3. Phase: Adjust Docs
+### 3. Phase: Adjust
 
-- Determine whether **Docs Core Files** (**README.md** or **{root}/docs/DEVELOPMENT.md**) need updating due to changes from previous phases. Updates for README.md or DEVELOPMENT.md may be required, if **any** of these occurred:
+- Determine whether **Fadro Core Files** need updating due to changes from previous phases.  
+  Updates for README.md or DEVELOPMENT.md may be required, if **any** of these occurred:
   - Development workflow changed (NPM scripts, build process, dev/test process, etc.).
   - End-user workflow changed (for NPM packages: installation, usage, etc.).
   - Any project config file changed (e.g., `tsconfig.json`, `vitest.config.js`, `package.json`, `.gitignore`, `.npmignore`, etc.).
@@ -160,14 +148,22 @@ When prompted with the **exact** case-sensitive command:
   - Directory structure changed.
   - Any Fadro Core File no longer reflects reality.
 
-  **This list is NOT exhaustive** - it depends solely on actual project documentation, tooling and configuration itself.
+  Update for `{root}/.cursor/rules` may be necessary if any rule becomes too low specific, not clear or new rule is necessary. For example, if any of these occurred:
+  - **Scenario 1**: Ambitious Young Developer asked, why one or more rules are violated: "Why this variable has polish name?", "Why didn't You checked correct Phase name?", "Why plan of work wasn't detailed enough in first attempt?". Meaning: possibly some rules need to be more specific or reworded.
+  - **Scenario 2**: Ambitious Young Developer pointed out, that you weren't specific enough during coding, testing or creating docs. Meaning: possibly some docs or rules are missing and You don't understand codebase, or understand it wrongly.
+  - **Scenario 3**: Ambitious Young Developer repeatedly ask for the same code improvement, for example: "Write test for this piece of code", "Expose this module to tests", "Write test with well defined assertions". Meaning: possibly You are lack of important informations about development flow; therefore, some rules or docs should be created or improved.
+  - **Scenario 4**: User questions AI's understanding of workflow or points out repeated mistakes
+  - **Scenario 5**: AI makes same mistake multiple times despite existing rules
+  - **Scenario 6**: User points out gaps in AI's knowledge or understanding
+
+  **This list is NOT exhaustive** - any situation where rules prove insufficient requires update.
 
 **Workflow:**
-1. If updates are required, update the relevant **Docs Core Files**.
+1. If updates are required, update the relevant Fadro Core Files.
 2. If not required, skip updates.
-3. Log in `{root}/docs/task-log.md` ("Progress logs") at the END of the section what was done or skipped.
+3. Log in `{root}/docs/task-log.md` ("Progress logs") what was done or skipped.
 4. Request approval to finish the phase.
-5. Announce phase completion upon approval at the END of the "Progress logs" section.
+5. Announce phase completion upon approval (in "Progress logs").
 
 ---
 
@@ -183,54 +179,6 @@ When prompted with the **exact** case-sensitive command:
   - Deleted (with reasons)
 
 **Workflow:**
-1. Add the summary to `{root}/docs/task-log.md` ("Progress logs") at the END of the section.
+1. Add the summary to `{root}/docs/task-log.md` ("Progress logs") below previous entries.
 2. Request approval to finish the phase.
-3. Upon approval, log the approval at the END of the "Progress logs" section.
-
----
-
-### 5. Phase: Merge
-
-- Execute git operations to merge the task branch back to develop.
-
-**Git Operations Must Include:**
-1. **Commit Changes**: Ensure all changes are committed before proceeding (check git status)
-2. **Push Task Branch**: Push the current task branch to the remote repository.
-3. **Switch to Develop**: Checkout the "develop" branch.
-4. **Merge Task Branch**: Merge the task branch into develop.
-5. **Push Develop**: Push the updated develop branch to the remote repository.
-
-**Workflow:**
-1. Execute all git operations in sequence.
-2. Verify that merge was successful and no conflicts occurred.
-3. Confirm that develop branch is up to date with remote.
-4. Log the completion of merge operations in `{root}/docs/task-log.md` ("Progress logs") at the END of the section.
-5. Request approval to finish the phase.
-6. Upon approval, log the approval at the END of the "Progress logs" section.
-
-**Important Notes:**
-- This phase is separate from Summarise to give the user control over when git operations occur.
-- User can interrupt this phase at any time after accepting the completion of Summarise phase.
-- All git operations must be logged for transparency and debugging purposes.
-- **Note**: This phase now comes AFTER Summarise, so the user has already reviewed the summary before git operations begin.
-
----
-
-### 6. Phase: Improve Fadro
-You MUST review the conversation history to identify patterns of repeated corrections, rule violations, or user frustration that indicate rules need improvement. This is the time for reflection on what went wrong and how to prevent it in the future. Then, fix or improve rules inside **Fadro Core Files**, ONLY if it is needed. Determine whether **Fadro Core Files** need updating due to whole conversation. Update for `{root}/.cursor/rules` may be necessary if any Fadro rule becomes too low specific, not clear or new rule is necessary. For example, if any of these occurred:
-  - **Scenario 1**: Ambitious Young Developer asked, why one or more rules were violated: "Why this variable has polish name?", "Why didn't You checked correct Phase name?", "Why plan of work wasn't detailed enough in first attempt?". Meaning: possibly some rules need to be more specific or reworded.
-  - **Scenario 2**: Ambitious Young Developer pointed out, that you weren't specific enough during coding, testing or creating docs. Meaning: possibly some docs or rules are missing and You don't understand codebase, or understand it wrongly.
-  - **Scenario 3**: Ambitious Young Developer repeatedly ask for the same code improvement, for example: "Write test for this piece of code", "Expose this module to tests", "Write test with well defined assertions". Meaning: possibly You are lack of important information about development flow; therefore, some rules or docs should be created or improved.
-  - **Scenario 4**: User questions AI's understanding of workflow or points out repeated mistakes
-  - **Scenario 5**: AI makes same mistake multiple times despite existing rules
-  - **Scenario 6**: User points out gaps in AI's knowledge or understanding
-  - **Scenario 7**: User explicitly stated that rules were unclear or asked why AI keeps making the same mistake despite corrections
-
-  **CRITICAL**: Review the entire conversation history to identify patterns that match any of these scenarios. Look for repeated corrections, user frustration, or situations where the AI repeatedly made the same mistake despite existing rules. **Scenario list is NOT exhaustive** - search for any situation where rules prove insufficient or not clear enough.
-
-**Workflow:**
-1. If updates are required, update the relevant Fadro Core Files.
-2. If not required, skip updates.
-3. Log in `{root}/docs/task-log.md` ("Progress logs") at the END of the section what was done or skipped.
-4. Request approval to finish the phase.
-5. Announce phase completion upon approval at the END of the "Progress logs" section.
+3. Upon approval, log the approval below the summary (in "Progress logs").
