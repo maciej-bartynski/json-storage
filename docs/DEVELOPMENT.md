@@ -2,32 +2,6 @@
 
 Complete technical guide for developing, maintaining, and deploying the JSON Storage package.
 
-## Quick Development Path
-
-**For developers in a hurry - complete workflow in 3 steps:**
-
-### 1. Setup & First Run
-```bash
-npm install
-npm run build
-npm run test
-```
-
-### 2. Make Changes & Test
-```bash
-# Edit source files in src/
-npm run build          # Compile changes
-npm run test          # Verify everything works
-```
-
-### 3. Deploy to Production
-```bash
-npm version patch     # Bump version
-npm publish          # Builds automatically via prepublishOnly
-```
-
-**That's it!** For detailed explanations, see sections below.
-
 ## Prerequisites
 
 - Node.js 18+ (ES2024 support required)
@@ -62,30 +36,32 @@ json-storage/
 
 ### Available Scripts
 
-- **`npm run dev`** - Start Vitest in watch mode for development
-- **`npm run test`** - Run all tests once
 - **`npm run build`** - Compile TypeScript to JavaScript
+- **`npm run test`** - Run all tests once
+- **`npm run dev`** - Start Vitest in watch mode for development
 - **`npm run prepublishOnly`** - Build before publishing (automatic)
 
-### Development Mode
+### Development Process
 
+**Critical**: Tests run against **built code** in `dist/` folder, not source code.
+
+**Standard Workflow:**
 ```bash
+# 1. Build the project
+npm run build
+
+# 2. Run tests against built code
+npm run test
+
+# 3. For development with auto-rebuild:
 npm run dev
 ```
 
-**IMPORTANT**: This requires `dist/` folder to exist. Always run `npm run build` first.
-
-**What it does:**
+**Development Mode (`npm run dev`):**
 - Starts Vitest in watch mode
 - Automatically re-runs tests when files change
-- **Tests run against built code** in `dist/` folder
+- **Requires `dist/` folder to exist** - always build first
 - **Does NOT auto-rebuild** - you must manually rebuild after source changes
-
-**Development Workflow:**
-1. Make changes to source code
-2. Run `npm run build` to compile
-3. Tests automatically re-run against new build
-4. Repeat
 
 ### Testing
 
@@ -107,10 +83,6 @@ npm run test
 - **`JSONStorage.filter.test.ts`**: Advanced filtering and query operations
 - **`JSONStorage.maxFileAmount.test.ts`**: File limit management and statistics functionality
 - **Coverage**: Tests verify the actual compiled output that users will consume
-
-**Test Files:**
-- `tests/JSONStorage.test.ts` - Core CRUD operations and connection tests
-- `tests/JSONStorage.filter.test.ts` - Advanced filtering and query tests
 
 **Why Test Built Code?**
 - Ensures TypeScript compilation produces working JavaScript
@@ -206,38 +178,6 @@ Automatically runs build before publishing to ensure latest code is compiled.
 - `@types/node` - Node.js type definitions
 - `typescript` - TypeScript compiler
 - `vitest` - Testing framework
-
-## Development Workflow Details
-
-### Critical Development Process
-
-**IMPORTANT**: Tests run against the **built code** in `dist/` folder, not source code directly. This means:
-
-1. **Before running tests**: You must build the project first
-2. **Development workflow**: Build → Test → Modify → Build → Test
-3. **Vitest configuration**: Points to `dist/src` via alias `#src`
-
-### Why This Architecture?
-
-- Tests verify the **actual compiled output** that will be published
-- Ensures TypeScript compilation works correctly
-- Catches build-time errors during development
-- Tests the exact code that users will consume
-
-### Correct Development Sequence
-
-```bash
-# 1. Build the project
-npm run build
-
-# 2. Run tests against built code
-npm run test
-
-# 3. For development with auto-rebuild:
-npm run dev
-```
-
-**Note**: `npm run dev` (Vitest watch mode) will fail if `dist/` folder doesn't exist. Always build first.
 
 ### Common Development Issues
 
