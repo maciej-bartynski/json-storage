@@ -46,7 +46,6 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@bartek01001/async-tasks-queue": "^2.0.0",
-    "ci": "^2.3.0"
+    "@bartek01001/async-tasks-queue": "^2.0.0"
   }
 }
