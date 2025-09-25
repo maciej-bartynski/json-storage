@@ -6,11 +6,11 @@ describe('Field equality', () => {
     let connection: Awaited<ReturnType<typeof testStorage.connect>>
 
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: 'test_filter_equality' });
-        connection = await testStorage.connect();
+        testStorage = JSONStorage.getInstance({ directory: 'test_filter_equality' });
+        connection = await testStorage.connect('test_filter_equality');
 
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_equality`;
 
         for (let i = MIN_ORDER; i <= MAX_ORDER; i++) {
             const file: TestFile = {
@@ -25,8 +25,8 @@ describe('Field equality', () => {
     });
 
     afterAll(async () => {
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_equality`;
         await fs.rm(dirPath, { recursive: true });
     });
 
@@ -67,11 +67,11 @@ describe('Filtering by $regex', () => {
     let connection: Awaited<ReturnType<typeof testStorage.connect>>
 
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: 'test_filter_regex' });
-        connection = await testStorage.connect();
+        testStorage = JSONStorage.getInstance({ directory: 'test_filter_regex' });
+        connection = await testStorage.connect('test_filter_regex');
 
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_regex`;
 
         for (let i = MIN_ORDER; i <= MAX_ORDER; i++) {
             const file: TestFile = {
@@ -86,8 +86,8 @@ describe('Filtering by $regex', () => {
     });
 
     afterAll(async () => {
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_regex`;
         await fs.rm(dirPath, { recursive: true });
     });
 
@@ -120,11 +120,11 @@ describe('Filtering by $in', () => {
     let connection: Awaited<ReturnType<typeof testStorage.connect>>
 
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: 'test_filter_in' });
-        connection = await testStorage.connect();
+        testStorage = JSONStorage.getInstance({ directory: 'test_filter_in' });
+        connection = await testStorage.connect('test_filter_in');
 
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_in`;
 
         for (let i = MIN_ORDER; i <= MAX_ORDER; i++) {
             const file: TestFile = {
@@ -139,8 +139,8 @@ describe('Filtering by $in', () => {
     });
 
     afterAll(async () => {
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_in`;
         await fs.rm(dirPath, { recursive: true });
     });
 
@@ -180,11 +180,11 @@ describe('Filtering by $nin', () => {
     let connection: Awaited<ReturnType<typeof testStorage.connect>>
 
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: 'test_filter_nin' });
-        connection = await testStorage.connect();
+        testStorage = JSONStorage.getInstance({ directory: 'test_filter_nin' });
+        connection = await testStorage.connect('test_filter_nin');
 
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_nin`;
 
         for (let i = MIN_ORDER; i <= MAX_ORDER; i++) {
             const file: TestFile = {
@@ -199,8 +199,8 @@ describe('Filtering by $nin', () => {
     });
 
     afterAll(async () => {
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_nin`;
         await fs.rm(dirPath, { recursive: true });
     });
 
@@ -227,15 +227,6 @@ describe('Filtering by $nin', () => {
         expect(files.length).toBe(11);
         expect(files.every(file => !file.equipment.includes('ring') && !file.equipment.includes('shield'))).toBe(true);
     });
-
-
-
-
-
-
-
-
-    /////
 
     it('should filter by number field not equal', async () => {
         const files = await connection.filter({
@@ -296,11 +287,11 @@ describe('Filtering by math comparison: $ne, $gt, $gte, $lt, $lte', () => {
     let connection: Awaited<ReturnType<typeof testStorage.connect>>
 
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: 'test_filter_nin' });
-        connection = await testStorage.connect();
+        testStorage = JSONStorage.getInstance({ directory: 'test_filter_math' });
+        connection = await testStorage.connect('test_filter_math');
 
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_math`;
 
         for (let i = MIN_ORDER; i <= MAX_ORDER; i++) {
             const file: TestFile = {
@@ -315,8 +306,8 @@ describe('Filtering by math comparison: $ne, $gt, $gte, $lt, $lte', () => {
     });
 
     afterAll(async () => {
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_math`;
         await fs.rm(dirPath, { recursive: true });
     });
 
@@ -379,11 +370,11 @@ describe('Filtering by combining filters with $and', () => {
     let connection: Awaited<ReturnType<typeof testStorage.connect>>
 
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: 'test_filter_nin' });
-        connection = await testStorage.connect();
+        testStorage = JSONStorage.getInstance({ directory: 'test_filter_and' });
+        connection = await testStorage.connect('test_filter_and');
 
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_and`;
 
         for (let i = MIN_ORDER; i <= MAX_ORDER; i++) {
             const file: TestFile = {
@@ -398,8 +389,8 @@ describe('Filtering by combining filters with $and', () => {
     });
 
     afterAll(async () => {
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_and`;
         await fs.rm(dirPath, { recursive: true });
     });
 
@@ -447,20 +438,6 @@ describe('Filtering by combining filters with $and', () => {
         expect(files.length).toBe(10);
         expect(files.every(file => file.equipment.includes('ring') || file.equipment.includes('shield') && !file.equipment.includes('sword'))).toBe(true);
     });
-
-
-
-
-
-    // it('should filter by multiple fields', async () => {
-    //     const files = await connection.filter({
-    //         where: {
-    //             age: { $gte: 50 },
-    //             status: { $eq: 'active' }
-    //         }
-    //     });
-    //     expect(files.length).toBe(25);
-    // });
 });
 
 describe('Filtering by combining filters with $or', () => {
@@ -468,11 +445,11 @@ describe('Filtering by combining filters with $or', () => {
     let connection: Awaited<ReturnType<typeof testStorage.connect>>
 
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: 'test_filter_nin' });
-        connection = await testStorage.connect();
+        testStorage = JSONStorage.getInstance({ directory: 'test_filter_or' });
+        connection = await testStorage.connect('test_filter_or');
 
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_or`;
 
         for (let i = MIN_ORDER; i <= MAX_ORDER; i++) {
             const file: TestFile = {
@@ -487,8 +464,8 @@ describe('Filtering by combining filters with $or', () => {
     });
 
     afterAll(async () => {
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_or`;
         await fs.rm(dirPath, { recursive: true });
     });
 
@@ -543,11 +520,11 @@ describe('Filtering by combining filters with $not', () => {
     let connection: Awaited<ReturnType<typeof testStorage.connect>>
 
     beforeAll(async () => {
-        testStorage = new JSONStorage({ directory: 'test_filter_nin' });
-        connection = await testStorage.connect();
+        testStorage = JSONStorage.getInstance({ directory: 'test_filter_not' });
+        connection = await testStorage.connect('test_filter_not');
 
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_not`;
 
         for (let i = MIN_ORDER; i <= MAX_ORDER; i++) {
             const file: TestFile = {
@@ -562,8 +539,8 @@ describe('Filtering by combining filters with $not', () => {
     });
 
     afterAll(async () => {
-        const dir = testStorage['directory'];
-        const dirPath = `${process.cwd()}/${dir}`;
+        const dir = testStorage['baseDirectory'];
+        const dirPath = `${process.cwd()}/${dir}/test_filter_not`;
         await fs.rm(dirPath, { recursive: true });
     });
 
@@ -598,9 +575,6 @@ const MAX_ORDER = 99;
 
 const resolveStatusByAge = (age: number): ('active' | 'inactive') => {
     const iterationOrder = resolveOrderByAge(age);
-    /**
-     * All even numbers are active, all odd numbers are inactive
-     */
     return ['active', 'inactive'][iterationOrder % 2] as ('active' | 'inactive')
 }
 
@@ -608,79 +582,41 @@ const resolveEquipmentByAge = (age: number): ('ring' | 'sword' | 'shield')[] => 
     const iterationOrder = resolveOrderByAge(age);
 
     if (iterationOrder < 25) {
-        /**
-         * 0-24
-         * total: 25
-         */
         return ['ring']
     }
 
     if (iterationOrder < 35) {
-        /**
-        * 25-34
-        * total: 10
-        */
         return ['sword']
     }
 
     if (iterationOrder < 50) {
-        /**
-         * 35-49
-         * total: 15
-         */
         return ['shield']
     }
 
     if (iterationOrder < 75) {
-        /**
-         * 50-74
-         * total: 25
-         */
         return ['ring', 'sword']
     }
 
     if (iterationOrder < 80) {
-        /**
-         * 75-79
-         * total: 5
-         */
         return ['sword', 'shield']
     }
 
     if (iterationOrder < 90) {
-        /**
-         * 80-89
-         * total: 10
-         */
         return ['ring', 'shield']
     }
 
     if (iterationOrder < 99) {
-        /**
-         * 90-98
-         * total: 9
-         */
         return ['ring', 'sword', 'shield']
     }
 
-    /**
-     * 99
-     * total: 1
-     */
     return []
 }
 
 const resolveAgeByOrder = (order: number): number => {
-    /**
-     * 1-100
-     */
     return order + 1;
 }
 
 const resolveOrderByAge = (age: number): number => {
-    /**
-     * 0-99
-     */
     const iterationOrder = age - 1;
     return iterationOrder;
 }

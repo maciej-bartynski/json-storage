@@ -104,3 +104,6 @@ ehthumbs_vista.db
 # Temporary folders
 tmp/
 temp/
+
+# Fadro
+docs/task-log.md

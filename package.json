@@ -1,6 +1,6 @@
 {
   "name": "@bartek01001/json-storage",
-  "version": "2.0.0",
+  "version": "3.0.1",
   "description": "Service to manage CURD operations on JSON files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
     "nodejs",
     "filesystem",
     "CRUD",
-    "nodejs"
+    "esm"
   ],
   "author": "bartek01001",
   "license": "MIT",
@@ -40,11 +40,13 @@
     "access": "public"
   },
   "devDependencies": {
+    "@bartek01001/fadro": "^4.0.0",
     "@types/node": "^24.0.14",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@bartek01001/async-tasks-queue": "^2.0.0"
+    "@bartek01001/async-tasks-queue": "^2.0.0",
+    "ci": "^2.3.0"
   }
 }

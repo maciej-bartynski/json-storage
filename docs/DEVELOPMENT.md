@@ -1,160 +1,194 @@
-# JSON Storage - AI Development Guide
+# Development Guide
 
-## Package Overview
+Complete technical guide for developing, maintaining, and deploying the JSON Storage package.
 
-**@bartek01001/json-storage** is a TypeScript npm package that provides a lightweight, file-based JSON storage solution for Node.js. It offers CRUD operations, advanced filtering with MongoDB-like syntax, and file locking for concurrent access safety.
+## Prerequisites
 
-### Core Functionality
-- **File-based Storage**: Each document is stored as a separate JSON file
-- **CRUD Operations**: Complete Create, Read, Update, Delete functionality
-- **Advanced Filtering**: MongoDB-like query syntax with operators like `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$regex`, `$and`, `$or`, `$not`
-- **Concurrent Access Safety**: File locking prevents data corruption during simultaneous operations
-- **TypeScript Support**: Full type definitions and IntelliSense support
-- **Sorting & Pagination**: Built-in support for sorting and limiting results
+- Node.js 18+ (ES2024 support required)
+- npm 9+
+
+## Local Development Setup
+
+Install dependencies:
+```bash
+npm install
+```
 
 ## Project Structure
 
 ```
 json-storage/
-├── src/
-│   ├── JSONStorage.ts         # Main class implementation
-│   └── JSONStorage.types.ts   # TypeScript type definitions
-├── tests/
-│   ├── JSONStorge.test.ts     # CRUD operations test suite
-│   └── JSONStorage.filter.test.ts # Advanced filtering test suite
-├── docs/
-│   └── DEVELOPMENT.md         # This file
-├── dist/                      # Compiled JavaScript + type definitions
-├── index.ts                   # Main export file
-├── package.json               # NPM package configuration
-├── tsconfig.json              # TypeScript config (development + tests)
-├── tsconfig.build.json        # TypeScript config (production build)
-├── jest.config.js             # Jest test configuration
-└── README.md                  # User documentation
+├── src/                    # Source code
+│   ├── JSONStorage.ts     # Main storage class
+│   └── JSONStorage.types.ts # Type definitions
+├── tests/                  # Test files
+│   ├── JSONStorage.test.ts # Core functionality tests
+│   ├── JSONStorage.filter.test.ts # Filtering tests
+│   └── JSONStorage.maxFileAmount.test.ts # File limit management tests
+├── dist/                   # Build output (generated)
+├── index.ts               # Main entry point
+├── tsconfig.json          # TypeScript configuration
+├── tsconfig.build.json    # Build-specific TypeScript config
+└── vitest.config.ts       # Test configuration
 ```
 
-## Configuration Files
+## Development Workflow
 
-### TypeScript Configuration
+### Available Scripts
 
-**tsconfig.json** (Development + Tests):
-- Includes both `src/` and `tests/` directories
-- Enables path aliases: `@/*` → `src/*`, `@tests/*` → `tests/*`
-- Generates source maps and declaration maps
-- Strict type checking enabled
+- **`npm run build`** - Compile TypeScript to JavaScript
+- **`npm run test`** - Run all tests once
+- **`npm run dev`** - Start Vitest in watch mode for development
+- **`npm run prepublishOnly`** - Build before publishing (automatic)
 
-**tsconfig.build.json** (Production Build):
-- Excludes `tests/` directory
-- Only compiles source code for npm package
-- Used by `npm run build` command
+### Development Process
 
-### Jest Configuration
+**Critical**: Tests run against **built code** in `dist/` folder, not source code.
 
-**jest.config.js**:
-- Uses `ts-jest` for TypeScript support
-- Maps path aliases for tests: `@/` → `src/`
-- Node.js test environment
-- Runs tests sequentially with `--runInBand` to avoid file system conflicts
-
-## Available Commands
-
-### Development Commands
+**Standard Workflow:**
 ```bash
-npm run dev          # Run tests in watch mode
-npm test             # Run tests once
-npm run build        # Compile TypeScript to dist/
+# 1. Build the project
+npm run build
+
+# 2. Run tests against built code
+npm run test
+
+# 3. For development with auto-rebuild:
+npm run dev
 ```
 
-### Publishing Commands
+**Development Mode (`npm run dev`):**
+- Starts Vitest in watch mode
+- Automatically re-runs tests when files change
+- **Requires `dist/` folder to exist** - always build first
+- **Does NOT auto-rebuild** - you must manually rebuild after source changes
+
+### Testing
+
 ```bash
-npm run prepublishOnly  # Auto-runs before npm publish
-npm pack               # Create local package for testing
-npm publish            # Publish to npm registry
+npm run test
 ```
 
-## Working with the Package
+**IMPORTANT**: Tests run against **built code** in `dist/` folder, not source code.
 
-### For AI Assistants
+**Test Configuration:**
+- **Framework**: Vitest 3.2.4
+- **Environment**: Node.js
+- **Execution**: Single-threaded, sequential (no concurrency)
+- **Timeout**: 10 seconds per test
+- **Test Target**: Compiled JavaScript in `dist/src/` (via `#src` alias)
 
-**When modifying the source code:**
-1. **Location**: Main implementation is in `src/JSONStorage.ts`
-2. **Types**: Type definitions are in `src/JSONStorage.types.ts`
-3. **Exports**: Main export is in `index.ts`
-4. **Testing**: Always run `npm test` after changes
-5. **Building**: Use `npm run build` to compile changes
+**Test Files:**
+- **`JSONStorage.test.ts`**: Core CRUD operations and connection tests
+- **`JSONStorage.filter.test.ts`**: Advanced filtering and query operations
+- **`JSONStorage.maxFileAmount.test.ts`**: File limit management and statistics functionality
+- **Coverage**: Tests verify the actual compiled output that users will consume
 
-**When adding new features:**
-1. **Implementation**: Add to `src/JSONStorage.ts`
-2. **Types**: Update `src/JSONStorage.types.ts` if new types are needed
-3. **Tests**: Add corresponding tests in appropriate test files:
-   - CRUD operations → `tests/JSONStorge.test.ts`
-   - Filtering features → `tests/JSONStorage.filter.test.ts`
-4. **Documentation**: Update `README.md` if API changes
+**Why Test Built Code?**
+- Ensures TypeScript compilation produces working JavaScript
+- Tests the exact code that will be published to NPM
+- Catches build-time errors during development
 
-**When fixing bugs:**
-1. **Reproduce**: Create test case in appropriate test file
-2. **Fix**: Modify `src/JSONStorage.ts` or `src/JSONStorage.types.ts`
-3. **Verify**: Run `npm test` to ensure all tests pass
-4. **Build**: Run `npm run build` to compile
+### Building
 
-### Key Implementation Details
+```bash
+npm run build
+```
 
-**JSONStorage Class:**
-- **Private directory**: Storage directory path
-- **Private connectinQueue**: AsyncTasksQueue for connection management
-- **connect()**: Establishes connection with file locking
-- **CRUD methods**: create, read, update, delete, all
-- **filter()**: Advanced filtering with MongoDB-like syntax
+**Build Process:**
+1. TypeScript compilation using `tsconfig.build.json`
+2. Output directory: `dist/`
+3. Generates: JavaScript files, type definitions, source maps
+4. Excludes test files from build
 
-**File Locking Mechanism:**
-- Uses directory-based locks (`.lock` folders)
-- Prevents concurrent access to same file
-- Automatic lock cleanup in try-catch blocks
-- Ensures data integrity during concurrent operations
+**Build Configuration:**
+- **Target**: ES2024
+- **Module**: NodeNext
+- **Output**: `dist/` directory
+- **Declaration files**: Enabled
+- **Source maps**: Enabled
 
-**Filter System:**
-- **evaluateFilter()**: Recursive function for complex filter evaluation
-- **Supported operators**: `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$nin`, `$regex`, `$and`, `$or`, `$not`
-- **Array support**: Handles both array fields and array operators
-- **Regex support**: String and RegExp pattern matching
+## TypeScript Configuration
 
-**Path Aliases:**
-- `@/JSONStorage` → `src/JSONStorage.ts`
-- `@/JSONStorage.types` → `src/JSONStorage.types.ts`
-- `@tests/*` → `tests/*`
-- Configured in both TypeScript and Jest
+### Main Config (`tsconfig.json`)
+- Includes source and test files
+- Path mapping for `#src/*` aliases
+- Vitest globals enabled
 
-**Test Strategy:**
-- **CRUD tests**: Verify create, read, update, delete operations
-- **Concurrency tests**: Test file locking and concurrent access
-- **Filter tests**: Comprehensive testing of all filter operators
-- **Error handling**: Test various error scenarios
-- **Type safety**: Ensure TypeScript types work correctly
+### Build Config (`tsconfig.build.json`)
+- Extends main config
+- Excludes test files
+- Used for production builds
 
-## Package Publishing Workflow
+## Code Architecture
 
-1. **Development**: Make changes in `src/`
-2. **Testing**: Run `npm test` to verify functionality
-3. **Building**: Run `npm run build` to compile to `dist/`
-4. **Packaging**: Run `npm pack` to test package contents
-5. **Publishing**: Run `npm publish` to release
+### Core Components
 
-## Important Notes for AI
+**JSONStorage Class**
+- Main storage service with CRUD operations
+- Automatic directory creation and permission handling
+- Connection queue for concurrent access control
 
-- **Always test changes**: The test suite is comprehensive and catches edge cases
-- **Maintain backward compatibility**: This is a storage library used by other projects
-- **Follow TypeScript best practices**: Use strict typing and proper error handling
-- **File system safety**: Always handle file operations with proper error handling
-- **Concurrency awareness**: Consider file locking when modifying storage operations
-- **Documentation**: Update README.md for any API changes
-- **Type safety**: Ensure all new features have proper TypeScript types
+**File Operations**
+- Atomic file operations with lock directories
+- UUID generation for document IDs
+- Error handling for filesystem operations
 
-## Dependencies
+**Filtering System**
+- MongoDB-like query operators
+- Support for comparison, array, string, and logical operators
+- Sorting and pagination capabilities
 
-**Production**: 
-- `@bartek01001/async-tasks-queue`: For connection management and file locking
+### Concurrency Control
 
-**Development**: 
-- TypeScript, Jest, ts-jest, type definitions
+- **AsyncTasksQueue**: Prevents concurrent initialization
+- **Lock Directories**: File-level locking for CRUD operations
+- **Single-threaded Tests**: Ensures deterministic test execution
 
-The package is designed to be lightweight with minimal production dependencies while providing robust file-based storage capabilities.
+## Publishing
+
+### Pre-publish Process
+
+```bash
+npm run prepublishOnly
+```
+
+Automatically runs build before publishing to ensure latest code is compiled.
+
+### Package Configuration
+
+- **Main Entry**: `dist/index.js`
+- **Type Definitions**: `dist/index.d.ts`
+- **Files Included**: `dist/` directory and `README.md`
+- **Access**: Public NPM package
+
+### Version Management
+
+- Update version in `package.json`
+- Run `npm publish` to release
+- Package automatically builds before publishing
+
+## Environment and Dependencies
+
+### Production Dependencies
+- `@bartek01001/async-tasks-queue` - Concurrency control
+
+### Development Dependencies
+- `@bartek01001/fadro` - Development framework
+- `@types/node` - Node.js type definitions
+- `typescript` - TypeScript compiler
+- `vitest` - Testing framework
+
+### Common Development Issues
+
+**Tests Fail with Import Errors**
+- **Cause**: `dist/` folder missing or outdated
+- **Solution**: Run `npm run build` before `npm run test`
+
+**Vitest Cannot Resolve #src Aliases**
+- **Cause**: Build output missing
+- **Solution**: Ensure `dist/src/` contains compiled JavaScript files
+
+**TypeScript Errors in Tests**
+- **Cause**: Tests import from `#src/*.js` (built code), not source
+- **Solution**: Build project to generate `dist/` folder

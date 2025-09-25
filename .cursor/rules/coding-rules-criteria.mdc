@@ -1,0 +1,39 @@
+---
+alwaysApply: true
+---
+# Coding Rules Criteria
+- All code must use English language: variables, functions, filenames, etc. No Polish allowed in code.
+- **Code must be self-explanatory without comments** - This rule applies to ALL code files in the project (TypeScript, JavaScript, test files). No explanatory comments are allowed in any code.
+- **Only use comments for temporary workarounds — never for standard logic** - Standard logic includes test logic, and any non-temporary code explanations. This rule applies to ALL code files.
+- **If a comment feels needed, rethink the code** - This applies to all code contexts: production code, tests, examples, and configuration files. Make the code self-explanatory instead of adding comments.
+- All code must be covered by tests
+- All tests must be deterministic, with exact, well-defined assertions (no "this or possibly that" approach)
+- Prefer *reuse existing code* over *create new code*, whenever it is possible
+- When creating code, keep it *reusable for future tasks* wherever it makes sense and is compatibile with best practices and official standards.
+- Always follow official documentations and/or well-known practises for technologies used. For example: Typescript official documentation and guidelines, accepted answers from stackoverflow and well-known best practises, Node.js official documentation, Javascript official documentation, ECMA Script standard, NPM official documentation, package official documentation or its README if use packages, best node practices, accepted package-related answers from stackoverflow and well-known best practises and standards.
+- Never relay on shady, not accepted by community, not bulletproof solutions.
+- Never mix technologies in Your answers, for example: when asked about some "formik" package problem, don't give "informed" package solutions. When asked for node.js server specific problem, don't give "php" server solutions, etc. 
+- Be always aware if You work with frontend or backend code.
+- For backend, be always aware if it's ESM or CJS project. 
+- For frontend, be always aware of framework, for example: if this is React or vanilla.js or other.
+- Be always aware of exact NPM packages used in project - their name, documentation for exact version. Base on this knowledge.   
+- Only use bullet-proof code and architecture 
+- Never "figure-it-out" solutions by Yourself, never use made-up answers, never use filler-language. Admit You don't know, if You don't know.
+
+## Documentation and Testing Rules
+- **NEVER** create documentation sections without verification
+- **ALWAYS** test documentation examples before declaring them complete
+- **If testing reveals errors**: Document them in task-log.md and ask user how to proceed
+- **Content quality**: No made-up information
+- **Avoid obvious content**: Skip overly basic instructions (e.g., "Clone the repository")
+- **Proactive verification**: Test workflows, commands, and examples proactively
+
+## Comment and Code Quality Rules
+- **NO COMMENTS IN CODE FILES**: The "no comments" rule applies to ALL code files (TypeScript, JavaScript, JSON, test files, configuration files)
+- **Test files are NOT exempt**: Test files must follow the same comment-free standards as production code
+- **Code examples in documentation CAN contain comments**: Code examples in README.md, DEVELOPMENT.md, and other documentation files can and should contain explanatory comments to help users understand the code
+- **Configuration files CAN contain comments**: Configuration files (tsconfig.json, package.json, etc.) can contain helpful comments to explain configuration options
+- **Markdown files (.md) CAN contain explanatory text**: README.md, DEVELOPMENT.md, etc. can have normal documentation text and code examples with helpful comments
+- **When in doubt, remove the comment**: If you're unsure whether a comment is allowed in code, remove it
+- **Code must explain itself**: Variable names, function names, and structure must make the code's purpose clear
+

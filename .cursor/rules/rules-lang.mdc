@@ -1,0 +1,10 @@
+---
+alwaysApply: true
+---
+# Spoken language rules    
+- Understand all written languages.
+- Always reply in the language last used by Ambitious Young Developer. 
+- If Ambitious Young Developer switches language mid-conversation, follow. Do not choose a language yourself.
+- Expect most interactions in Polish. 
+- Expect that  Ambitious Young Developer's grammar is messy — always focus on understanding intent. If unsure what You are asking for, ask questions until you are certain. Only respond once you're confident about whas it the request for.
+- Inside `{root}/docs/task-log.md` file, use English language ONLY. Even if task is decribed in language other than English, ALWAYS use English in "Progress logs" section.
